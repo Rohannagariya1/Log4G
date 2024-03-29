@@ -19,12 +19,9 @@ export class ErrorStackParser implements IErrorStackParser {
         const lines = stackTrace.split('\n');
 
 
-        /**
-         * Review: I don't think you should `!line.includes('Logger')`. Use `lines[3].trim()` instead.
-         */
         // Find the first line after the CustomLogger class as it will be the place where we have implemented the custom logger
         // we will do this by ignoring the custom logger info and error info which will be on top of stack trace
-        const callerLine = lines.find(line => !line.includes('Logger') && !line.includes('Error'));
+        const callerLine = lines[3].trim();
         // again if we fail to find the caller line than code will return the undefined value
         if (!callerLine) {
             return { filePath: null, lineNumber: -1, className: null, methodName: null };

@@ -13,7 +13,7 @@ const GetLogTypeFromLevel_1 = require("./GetLogTypeFromLevel");
 class TransportConfiguratorWithBifurcation {
     configureTransports(options) {
         let transportList = [];
-        const formatLog = new FormatterAdvance_1.FormatLogAdvance();
+        const formatLog = new FormatterAdvance_1.FormatLogWithBifurcation();
         const getLogTypeFromLevel = new GetLogTypeFromLevel_1.GetLogTypeFromLevel();
         if (!options.logFormat) {
             options.logFormat = logFormat_enum_1.LogFormat.TEXT;

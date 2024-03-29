@@ -1,7 +1,7 @@
 import { transports } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import { ILoggerOptions } from '../logger/models/ILoggerOptions';
-import { FormatLogAdvance } from '../formatter/FormatterAdvance';
+import { FormatLogWithBifurcation } from '../formatter/FormatterAdvance';
 import { ITransportConfigurator } from './interfaces/ITransportconfigurator';
 import { LogFormat } from '../formatter/enums/logFormat.enum';
 import { LogType } from './enums/LogType.enum';
@@ -11,7 +11,7 @@ import { GetLogTypeFromLevel } from './GetLogTypeFromLevel';
 export class TransportConfiguratorWithBifurcation implements ITransportConfigurator {
     configureTransports(options: ILoggerOptions): any[] {
         let transportList = [];
-        const formatLog = new FormatLogAdvance();
+        const formatLog = new FormatLogWithBifurcation();
         const getLogTypeFromLevel : GetLogTypeFromLevel = new GetLogTypeFromLevel();
 
         if (!options.logFormat) {

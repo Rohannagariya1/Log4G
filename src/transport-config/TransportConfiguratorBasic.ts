@@ -1,4 +1,4 @@
-import { transports, format  } from 'winston';
+import { transports } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import { ILoggerOptions } from '../logger/models/ILoggerOptions';
 import { ITransportConfigurator } from './interfaces/ITransportconfigurator';

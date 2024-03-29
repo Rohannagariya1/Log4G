@@ -18,13 +18,12 @@ class FormatLogBasic {
             case logFormat_enum_1.LogFormat.TEXT:
                 formatComponents.push(winston_1.format.printf((info) => {
                     let baseMsg = `${info.timestamp} ${info.level}: ${info.message}`;
-                    if (info.context) {
-                        baseMsg += ` | Context: ${JSON.stringify(info.context)}`; // Review: Get reviewed by Saket for mem leaks
-                    }
+                    let contextMessage = info.context || '';
+                    let parseStackMessage = '';
                     if (info.parsedStack) {
-                        baseMsg += ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
+                        parseStackMessage = ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
                     }
-                    return baseMsg;
+                    return baseMsg + contextMessage + parseStackMessage;
                 }));
                 break;
             default:
