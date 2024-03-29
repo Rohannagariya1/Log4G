@@ -1,0 +1,58 @@
+import { transports } from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
+import { ILoggerOptions } from '../logger/models/ILoggerOptions';
+import { FormatLogAdvance } from '../formatter/FormatterAdvance';
+import { ITransportConfigurator } from './interfaces/ITransportconfigurator';
+import { LogFormat } from '../formatter/enums/logFormat.enum';
+import { LogType } from './enums/LogType.enum';
+import { GetLogTypeFromLevel } from './GetLogTypeFromLevel';
+
+// Review: Comment this code to be more understandable to others
+export class TransportConfiguratorWithBifurcation implements ITransportConfigurator {
+    configureTransports(options: ILoggerOptions): any[] {
+        let transportList = [];
+        const formatLog = new FormatLogAdvance();
+        const getLogTypeFromLevel : GetLogTypeFromLevel = new GetLogTypeFromLevel();
+
+        if (!options.logFormat) {
+            options.logFormat = LogFormat.TEXT;
+        }
+      
+        if (options.enableStdout) {
+            const loggerFormat = formatLog.formatter(options.logFormat);
+
+            transportList.push(new transports.Console({
+                format: loggerFormat,
+            }));
+        }
+
+        if(options.fileOptions){
+            const fileOptionsArray = Array.isArray(options.fileOptions) ? options.fileOptions : [options.fileOptions];
+            for (const fileList of fileOptionsArray){
+                const loggerFormat = formatLog.formatter(options.logFormat, fileList.logLevel);
+                if (fileList.enableFile) {
+                    if (!fileList.nameOfProject || fileList.nameOfProject.trim() === '') {
+                        throw new Error("File logging is enabled but no project name was provided.");
+                    }
+                 
+                   const logType= getLogTypeFromLevel.getLogType(fileList.logLevel);
+
+                    const fileName = `${process.env.HOME}/.gromo-logger/${fileList.nameOfProject}/${logType}/${fileList.logLevel}/${fileList.nameOfProject}-${logType}-${fileList.logLevel}`;
+
+                    transportList.push(new DailyRotateFile({
+                        filename: fileName,
+                        datePattern: 'YYYY-MM-DD',
+                        zippedArchive: false,
+                        maxSize: '20m', // REVIEW: move to config
+                        maxFiles: '14d',
+                        level: fileList.logLevel,
+                        format: loggerFormat,
+                    }));
+                }
+            }
+        }
+        return transportList;
+    }
+  
+
+} 

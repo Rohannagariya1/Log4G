@@ -1,0 +1,20 @@
+ 
+ trace-id
+ service-ipaddress
+ requester-ipaddress
+ 
+
+ access log 
+ how much time taken 
+
+ api-create-time
+     "-"
+ api-response-time
+
+ response code (http status code)
+
+ uri path
+
+ test cases
+
+ 
