@@ -3,7 +3,7 @@ import { IFormatter } from "./interfaces/IFormatter";
 import { LogFormat } from "./enums/logFormat.enum";
 import { LogLevel } from "../logger/enums/LogLevel.enum";
 
-export class FormatLogAdvance implements IFormatter { // Review: Rename class to be similar to TransportConfiguratorWIthBifircation
+export class FormatLogWithBifurcation implements IFormatter { 
     formatter (logFormat: LogFormat , logLevel?: LogLevel): any {
 
         // This function filters logs and only keeps ones that are of specified log level
@@ -20,22 +20,24 @@ export class FormatLogAdvance implements IFormatter { // Review: Rename class to
             formatComponents.unshift(filterLevel(logLevel));
         }
   
-        // Review: Convert to switch case, and throw error in default case
-        // Add JSON or printf formatting based on logFormat
-        if (logFormat === LogFormat.JSON) {
-            formatComponents.push(format.json());
-        } else {
-            formatComponents.push(format.printf((info) => {
+        switch (logFormat) {
+            case LogFormat.JSON:
+                formatComponents.push(format.json());
+                break;
+            case LogFormat.TEXT:
+                formatComponents.push(format.printf((info) => {
                 let baseMsg = `${info.timestamp} ${info.level}: ${info.message}`;
-                if (info.context) {
-                    baseMsg += ` | Context: ${JSON.stringify(info.context)}`;
-                }
+                let contextMessage = info.context || ''; 
+               let parseStackMessage = '';
                 if (info.parsedStack) {
-                    baseMsg += ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
+                    parseStackMessage = ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
                 }
-                return baseMsg;
+                return baseMsg + contextMessage + parseStackMessage;
                 }
             ));
+            break;
+            default:
+                throw new Error("Unsupported Log Format: " + logFormat);
         }
   
         const loggerFormat = format.combine(...formatComponents);

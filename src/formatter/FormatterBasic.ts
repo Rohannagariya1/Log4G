@@ -1,4 +1,4 @@
-import { format} from "winston";
+import { Logform, format} from "winston";
 import { IFormatter } from "./interfaces/IFormatter";
 import { LogFormat } from "./enums/logFormat.enum";
 
@@ -19,15 +19,14 @@ export class FormatLogBasic implements IFormatter {
                 formatComponents.push(format.json());
                 break;
             case LogFormat.TEXT:
-                formatComponents.push(format.printf((info) => { // Review: For clarity - Give type to info
+                formatComponents.push(format.printf((info) => { 
                     let baseMsg = `${info.timestamp} ${info.level}: ${info.message}`;
-                    if (info.context) {
-                        baseMsg += ` | Context: ${JSON.stringify(info.context)}`; // Review: Get reviewed by Saket for mem leaks
-                    }
+                    let contextMessage = info.context || ''; 
+                   let parseStackMessage = '';
                     if (info.parsedStack) {
-                        baseMsg += ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
+                        parseStackMessage = ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
                     }
-                    return baseMsg;
+                    return baseMsg + contextMessage + parseStackMessage;
                 }));
                 break;
             default:

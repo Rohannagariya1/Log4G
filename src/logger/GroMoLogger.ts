@@ -28,13 +28,13 @@ export class GroMoLogger implements ILogger {
 
         this.logger = this.initializeLogger(transportList, logLevel);
         if(options.overrideConsole !== false){
-            this.overrideConsole(); // REVIEW: Keep this part of config
+            this.overrideConsole(); 
         }
     }
 
     private initializeLogger(transportList: any[], logLevel : LogLevel = LogLevel.INFO): Logger {
         return createLogger({
-            level: logLevel, // REVIEW: Check how winston reacts if level is undefined.
+            level: logLevel, // REVIEW: Check how winston reacts if level is undefined - done it will use info as default log level
             transports: transportList,
         });
     }
@@ -48,8 +48,10 @@ export class GroMoLogger implements ILogger {
 
   
     public warn(message: string | Error, context?: string, id?: string): void {
-          const error = this.errorStackHelper.getStackTrace(); // REVIEW: What happens if getStackTrace() returns / throws an error?
-          this.logMessage('warn', message,error, context, id);
+        const error = this.errorStackHelper.getStackTrace();
+        this.logMessage('warn', message,error, context, id);
+          
+
     }
     public info(message: string | Error, context?: string, id?: string): void {
         const error = this.errorStackHelper.getStackTrace();

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FormatLogAdvance = void 0;
+exports.FormatLogWithBifurcation = void 0;
 const winston_1 = require("winston");
 const logFormat_enum_1 = require("./enums/logFormat.enum");
-class FormatLogAdvance {
+class FormatLogWithBifurcation {
     formatter(logFormat, logLevel) {
         // This function filters logs and only keeps ones that are of specified log level
         const filterLevel = (level) => (0, winston_1.format)((info) => {
@@ -16,25 +16,26 @@ class FormatLogAdvance {
         if (logLevel) {
             formatComponents.unshift(filterLevel(logLevel));
         }
-        // Review: Convert to switch case, and throw error in default case
-        // Add JSON or printf formatting based on logFormat
-        if (logFormat === logFormat_enum_1.LogFormat.JSON) {
-            formatComponents.push(winston_1.format.json());
-        }
-        else {
-            formatComponents.push(winston_1.format.printf((info) => {
-                let baseMsg = `${info.timestamp} ${info.level}: ${info.message}`;
-                if (info.context) {
-                    baseMsg += ` | Context: ${JSON.stringify(info.context)}`;
-                }
-                if (info.parsedStack) {
-                    baseMsg += ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
-                }
-                return baseMsg;
-            }));
+        switch (logFormat) {
+            case logFormat_enum_1.LogFormat.JSON:
+                formatComponents.push(winston_1.format.json());
+                break;
+            case logFormat_enum_1.LogFormat.TEXT:
+                formatComponents.push(winston_1.format.printf((info) => {
+                    let baseMsg = `${info.timestamp} ${info.level}: ${info.message}`;
+                    let contextMessage = info.context || '';
+                    let parseStackMessage = '';
+                    if (info.parsedStack) {
+                        parseStackMessage = ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
+                    }
+                    return baseMsg + contextMessage + parseStackMessage;
+                }));
+                break;
+            default:
+                throw new Error("Unsupported Log Format: " + logFormat);
         }
         const loggerFormat = winston_1.format.combine(...formatComponents);
         return loggerFormat;
     }
 }
-exports.FormatLogAdvance = FormatLogAdvance;
+exports.FormatLogWithBifurcation = FormatLogWithBifurcation;

@@ -21,8 +21,8 @@ class GroMoLogger {
         this.isLoggingDisabled = transportList.length === 0;
         let logLevel = options.logLevel;
         this.logger = this.initializeLogger(transportList, logLevel);
-        if (options.overRideConsole == undefined || options.overRideConsole) {
-            this.overrideConsole(); // REVIEW: Keep this part of config
+        if (options.overrideConsole !== false) {
+            this.overrideConsole();
         }
     }
     initializeLogger(transportList, logLevel = LogLevel_enum_1.LogLevel.INFO) {
