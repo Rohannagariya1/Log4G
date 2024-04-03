@@ -15,18 +15,22 @@ export class LoggerInterceptorNest implements NestInterceptor {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   }
 
-  intercept(context: ExecutionContext, next: CallHandler) {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest();
-    const response = httpContext.getResponse();
     let traceId = request.headers['trace-id']; // Ensure your requests carry a trace-id header
     const requesterIp = request.ip;
     const path = request.path;
 
+    if (!traceId) {
+      traceId = this.generateTraceId();
+    }
+
     const store = { traceId, requesterIp, path };
 
-    this.asyncLocalStorage.run(store.toString(), () => {
+    this.asyncLocalStorage.run(JSON.stringify(store), () => {
       return next.handle();
     });
+    return next.handle();
   }
 }
