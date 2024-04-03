@@ -6,6 +6,7 @@ import { TransportConfiguratorFactory } from '../transport-config/TransporterFac
 import { TransporterType } from '../transport-config/enums/TransporterType.enum';
 import { ErrorHelper } from '../error-stack-parser/ErrorHelper';
 import { LogLevel } from './enums/LogLevel.enum';
+import { AsyncLocalStorage } from 'async_hooks';
 
 export class GroMoLogger implements ILogger {
 
@@ -14,7 +15,10 @@ export class GroMoLogger implements ILogger {
     private errorStackParser: ErrorStackParser = new ErrorStackParser();
     private errorStackHelper : ErrorHelper = new ErrorHelper();
 
-    constructor(options: ILoggerOptions) {
+    constructor(
+        options: ILoggerOptions,
+        private readonly asyncLocalStorage: AsyncLocalStorage<string>
+    ) {
         if(!options.transporterType){
             options.transporterType = TransporterType.SINGLE_FILE;
         }
@@ -80,6 +84,17 @@ export class GroMoLogger implements ILogger {
   
     private logMessage(level: string, message: string | Error,error?: Error, context?: string, id?: string): void {
         if (this.isLoggingDisabled) return;
+
+        // get trace-id, ip, and path
+        const store: string | undefined = this.asyncLocalStorage.getStore();
+
+        let traceId = null, requesterIp = null, path = null;
+        if (store) {
+            const storeJSON = JSON.parse(store);
+            traceId = storeJSON?.traceId;
+            requesterIp = storeJSON?.requesterIp;
+            path = storeJSON?.path;
+        }        
     
         const logData: { [key: string]: any } = { context };
         let logMessage: string;
