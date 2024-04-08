@@ -6,19 +6,18 @@ import { TransportConfiguratorFactory } from '../transport-config/TransporterFac
 import { TransporterType } from '../transport-config/enums/TransporterType.enum';
 import { ErrorHelper } from '../error-stack-parser/ErrorHelper';
 import { LogLevel } from './enums/LogLevel.enum';
-import { AsyncLocalStorage } from 'async_hooks';
+import { asyncLocalStorage } from '../interceptors/ContextStorage';
 
-export class GroMoLogger implements ILogger {
-
-    private logger: Logger;
+class GroMoLogger implements ILogger {
+    private projectName : string='';
+    private logger: Logger | undefined = undefined;
     private isLoggingDisabled: boolean = false;
     private errorStackParser: ErrorStackParser = new ErrorStackParser();
     private errorStackHelper : ErrorHelper = new ErrorHelper();
 
-    constructor(
-        options: ILoggerOptions,
-        private readonly asyncLocalStorage: AsyncLocalStorage<string>
-    ) {
+    constructor() { }
+    setConfig(options: ILoggerOptions){
+        this.projectName =options.nameOfProject;
         if(!options.transporterType){
             options.transporterType = TransporterType.SINGLE_FILE;
         }
@@ -48,6 +47,7 @@ export class GroMoLogger implements ILogger {
         console.error = (...args: any[]) => this.error(args.join(' '));
         console.warn = (...args: any[]) => this.warn(args.join(' '));
         console.debug = (...args: any[]) => this.debug(args.join(' '));
+
     }
 
   
@@ -85,35 +85,35 @@ export class GroMoLogger implements ILogger {
     private logMessage(level: string, message: string | Error,error?: Error, context?: string, id?: string): void {
         if (this.isLoggingDisabled) return;
 
-        // get trace-id, ip, and path
-        const store: string | undefined = this.asyncLocalStorage.getStore();
+            
+        const logContext = asyncLocalStorage.getStore();
 
-        let traceId = null, requesterIp = null, path = null;
-        if (store) {
-            const storeJSON = JSON.parse(store);
-            traceId = storeJSON?.traceId;
-            requesterIp = storeJSON?.requesterIp;
-            path = storeJSON?.path;
-        }        
+       
+        
+        if (this.isLoggingDisabled) return;
     
         const logData: { [key: string]: any } = { context };
+        logData.traceId = logContext?.traceId;
+
         let logMessage: string;
   
         if (message instanceof Error) {
             logMessage = message.message;
             if (message.stack) {
-                logData.parsedStack = this.errorStackParser.parse(message.stack);
+                logData.parsedStack = this.errorStackParser.parse(message.stack,this.projectName);
             }
       } else {
             logMessage = message;
             if (error && error.stack) {
-                logData.parsedStack = this.errorStackParser.parse(error.stack);
+                logData.parsedStack = this.errorStackParser.parse(error.stack,this.projectName);
             }
         }
   
       if (id) logData.id = id;
-  
+     if(this.logger)
       this.logger.log(level, logMessage, logData);
-  }
+}
 
 }
+const logger = new GroMoLogger()
+export default logger

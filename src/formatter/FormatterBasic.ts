@@ -16,17 +16,33 @@ export class FormatLogBasic implements IFormatter {
 
         switch (logFormat) {
             case LogFormat.JSON:
-                formatComponents.push(format.json());
+                formatComponents.push(format.printf((info) => {
+
+                    const logObject : LogObject = {
+                        timestamp: info.timestamp,
+                        level: info.level,
+                    };
+                    if (info.traceId) {
+                        logObject.traceId = info.traceId;
+                    }
+                    logObject.path = info.path || '';
+                    logObject.parsedStack = info.parsedStack ? JSON.stringify(info.parsedStack) : '';
+                    logObject.message = info.message;
+                    return JSON.stringify(logObject);
+                }));
                 break;
             case LogFormat.TEXT:
                 formatComponents.push(format.printf((info) => { 
-                    let baseMsg = `${info.timestamp} ${info.level}: ${info.message}`;
+                    let baseMsg = `${info.timestamp} ${info.level}`;
+                    let message = info.message;
                     let contextMessage = info.context || ''; 
-                   let parseStackMessage = '';
+                    let traceId = info.traceId || '';
+                    let id = info.id || '';
+                    let parseStackMessage = '';
                     if (info.parsedStack) {
                         parseStackMessage = ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
                     }
-                    return baseMsg + contextMessage + parseStackMessage;
+                    return baseMsg + ' ' + traceId + parseStackMessage + id + contextMessage  + message;
                 }));
                 break;
             default:

@@ -18,17 +18,32 @@ class FormatLogWithBifurcation {
         }
         switch (logFormat) {
             case logFormat_enum_1.LogFormat.JSON:
-                formatComponents.push(winston_1.format.json());
+                formatComponents.push(winston_1.format.printf((info) => {
+                    const logObject = {
+                        timestamp: info.timestamp,
+                        level: info.level,
+                    };
+                    if (info.traceId) {
+                        logObject.traceId = info.traceId;
+                    }
+                    logObject.path = info.path || '',
+                        logObject.parsedStack = info.parsedStack ? JSON.stringify(info.parsedStack) : '',
+                        logObject.message = info.message;
+                    return JSON.stringify(logObject);
+                }));
                 break;
             case logFormat_enum_1.LogFormat.TEXT:
                 formatComponents.push(winston_1.format.printf((info) => {
-                    let baseMsg = `${info.timestamp} ${info.level}: ${info.message}`;
+                    let baseMsg = `${info.timestamp} ${info.level}`;
+                    let message = info.message;
                     let contextMessage = info.context || '';
+                    let traceId = info.traceId || '';
+                    let id = info.id || '';
                     let parseStackMessage = '';
                     if (info.parsedStack) {
                         parseStackMessage = ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
                     }
-                    return baseMsg + contextMessage + parseStackMessage;
+                    return baseMsg + '  ' + traceId + parseStackMessage + contextMessage + id + message;
                 }));
                 break;
             default:

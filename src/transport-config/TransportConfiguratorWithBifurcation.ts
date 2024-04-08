@@ -23,6 +23,7 @@ export class TransportConfiguratorWithBifurcation implements ITransportConfigura
 
             transportList.push(new transports.Console({
                 format: loggerFormat,
+                level :options.logLevel,
             }));
         }
 
@@ -31,13 +32,13 @@ export class TransportConfiguratorWithBifurcation implements ITransportConfigura
             for (const fileList of fileOptionsArray){
                 const loggerFormat = formatLog.formatter(options.logFormat, fileList.logLevel);
                 if (fileList.enableFile) {
-                    if (!fileList.nameOfProject || fileList.nameOfProject.trim() === '') {
+                    if (!options.nameOfProject || options.nameOfProject.trim() === '') {
                         throw new Error("File logging is enabled but no project name was provided.");
                     }
                  
                    const logType= getLogTypeFromLevel.getLogType(fileList.logLevel);
 
-                    const fileName = `${process.env.HOME}/.gromo-logger/${fileList.nameOfProject}/${logType}/${fileList.logLevel}/${fileList.nameOfProject}-${logType}-${fileList.logLevel}`;
+                    const fileName = `${options.nameOfProject}/${logType}/${fileList.logLevel}/${options.nameOfProject}-${logType}-${fileList.logLevel}`;
 
                     transportList.push(new DailyRotateFile({
                         filename: fileName,

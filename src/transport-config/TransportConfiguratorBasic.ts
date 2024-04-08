@@ -20,11 +20,11 @@ export class TransportConfiguratorBasic implements ITransportConfigurator {
 
         if (options.fileOptions && !Array.isArray(options.fileOptions) && options.fileOptions.enableFile) {
 
-            if (!options.fileOptions.nameOfProject || options.fileOptions.nameOfProject.trim() === '') {
+            if (!options.nameOfProject || options.nameOfProject.trim() === '') {
                 throw new Error("File logging is enabled but no project name was provided.");
             }
 
-            const fileName = `${process.env.HOME}/.gromo-logger/${options.fileOptions.nameOfProject}-logs`;
+            const fileName = `${process.env.HOME}/.gromo-logger/${options.nameOfProject}-logs`;
   
             transportList.push(new DailyRotateFile({
                 filename: fileName,

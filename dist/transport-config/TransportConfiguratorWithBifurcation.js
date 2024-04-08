@@ -22,6 +22,7 @@ class TransportConfiguratorWithBifurcation {
             const loggerFormat = formatLog.formatter(options.logFormat);
             transportList.push(new winston_1.transports.Console({
                 format: loggerFormat,
+                level: options.logLevel,
             }));
         }
         if (options.fileOptions) {
@@ -29,11 +30,11 @@ class TransportConfiguratorWithBifurcation {
             for (const fileList of fileOptionsArray) {
                 const loggerFormat = formatLog.formatter(options.logFormat, fileList.logLevel);
                 if (fileList.enableFile) {
-                    if (!fileList.nameOfProject || fileList.nameOfProject.trim() === '') {
+                    if (!options.nameOfProject || options.nameOfProject.trim() === '') {
                         throw new Error("File logging is enabled but no project name was provided.");
                     }
                     const logType = getLogTypeFromLevel.getLogType(fileList.logLevel);
-                    const fileName = `${process.env.HOME}/.gromo-logger/${fileList.nameOfProject}/${logType}/${fileList.logLevel}/${fileList.nameOfProject}-${logType}-${fileList.logLevel}`;
+                    const fileName = `${options.nameOfProject}/${logType}/${fileList.logLevel}/${options.nameOfProject}-${logType}-${fileList.logLevel}`;
                     transportList.push(new winston_daily_rotate_file_1.default({
                         filename: fileName,
                         datePattern: 'YYYY-MM-DD',

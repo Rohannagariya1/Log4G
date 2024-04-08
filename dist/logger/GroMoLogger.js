@@ -1,17 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GroMoLogger = void 0;
 const winston_1 = require("winston");
 const ErrorStackParser_1 = require("../error-stack-parser/ErrorStackParser");
 const TransporterFactory_1 = require("../transport-config/TransporterFactory");
 const TransporterType_enum_1 = require("../transport-config/enums/TransporterType.enum");
 const ErrorHelper_1 = require("../error-stack-parser/ErrorHelper");
 const LogLevel_enum_1 = require("./enums/LogLevel.enum");
+const ContextStorage_1 = require("../interceptors/ContextStorage");
 class GroMoLogger {
-    constructor(options) {
+    constructor() {
+        this.projectName = '';
+        this.logger = undefined;
         this.isLoggingDisabled = false;
         this.errorStackParser = new ErrorStackParser_1.ErrorStackParser();
         this.errorStackHelper = new ErrorHelper_1.ErrorHelper();
+    }
+    setConfig(options) {
+        this.projectName = options.nameOfProject;
         if (!options.transporterType) {
             options.transporterType = TransporterType_enum_1.TransporterType.SINGLE_FILE;
         }
@@ -27,7 +32,7 @@ class GroMoLogger {
     }
     initializeLogger(transportList, logLevel = LogLevel_enum_1.LogLevel.INFO) {
         return (0, winston_1.createLogger)({
-            level: logLevel, // REVIEW: Check how winston reacts if level is undefined.
+            level: logLevel, // REVIEW: Check how winston reacts if level is undefined - done it will use info as default log level
             transports: transportList,
         });
     }
@@ -38,7 +43,7 @@ class GroMoLogger {
         console.debug = (...args) => this.debug(args.join(' '));
     }
     warn(message, context, id) {
-        const error = this.errorStackHelper.getStackTrace(); // REVIEW: What happens if getStackTrace() returns / throws an error?
+        const error = this.errorStackHelper.getStackTrace();
         this.logMessage('warn', message, error, context, id);
     }
     info(message, context, id) {
@@ -64,23 +69,29 @@ class GroMoLogger {
     logMessage(level, message, error, context, id) {
         if (this.isLoggingDisabled)
             return;
+        const logContext = ContextStorage_1.asyncLocalStorage.getStore();
+        if (this.isLoggingDisabled)
+            return;
         const logData = { context };
+        logData.traceId = logContext === null || logContext === void 0 ? void 0 : logContext.traceId;
         let logMessage;
         if (message instanceof Error) {
             logMessage = message.message;
             if (message.stack) {
-                logData.parsedStack = this.errorStackParser.parse(message.stack);
+                logData.parsedStack = this.errorStackParser.parse(message.stack, this.projectName);
             }
         }
         else {
             logMessage = message;
             if (error && error.stack) {
-                logData.parsedStack = this.errorStackParser.parse(error.stack);
+                logData.parsedStack = this.errorStackParser.parse(error.stack, this.projectName);
             }
         }
         if (id)
             logData.id = id;
-        this.logger.log(level, logMessage, logData);
+        if (this.logger)
+            this.logger.log(level, logMessage, logData);
     }
 }
-exports.GroMoLogger = GroMoLogger;
+const logger = new GroMoLogger();
+exports.default = logger;
