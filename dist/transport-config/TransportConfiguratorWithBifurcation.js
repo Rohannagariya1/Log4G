@@ -9,6 +9,7 @@ const winston_daily_rotate_file_1 = __importDefault(require("winston-daily-rotat
 const FormatterAdvance_1 = require("../formatter/FormatterAdvance");
 const logFormat_enum_1 = require("../formatter/enums/logFormat.enum");
 const GetLogTypeFromLevel_1 = require("./GetLogTypeFromLevel");
+const LogLevel_enum_1 = require("../logger/enums/LogLevel.enum");
 // Review: Comment this code to be more understandable to others
 class TransportConfiguratorWithBifurcation {
     configureTransports(options) {
@@ -25,27 +26,35 @@ class TransportConfiguratorWithBifurcation {
                 level: options.logLevel,
             }));
         }
-        if (options.fileOptions) {
-            const fileOptionsArray = Array.isArray(options.fileOptions) ? options.fileOptions : [options.fileOptions];
-            for (const fileList of fileOptionsArray) {
-                const loggerFormat = formatLog.formatter(options.logFormat, fileList.logLevel);
-                if (fileList.enableFile) {
-                    if (!options.nameOfProject || options.nameOfProject.trim() === '') {
-                        throw new Error("File logging is enabled but no project name was provided.");
-                    }
-                    const logType = getLogTypeFromLevel.getLogType(fileList.logLevel);
-                    const fileName = `${options.nameOfProject}/${logType}/${fileList.logLevel}/${options.nameOfProject}-${logType}-${fileList.logLevel}`;
-                    transportList.push(new winston_daily_rotate_file_1.default({
-                        filename: fileName,
-                        datePattern: fileList.datePattern,
-                        zippedArchive: fileList.zippedArchive,
-                        maxSize: fileList.maxFiles, // REVIEW: move to config
-                        maxFiles: fileList.maxFiles,
-                        level: fileList.logLevel,
-                        format: loggerFormat,
-                    }));
-                }
+        const allLevels = Object.values(LogLevel_enum_1.LogLevel);
+        if (options.fileOptions && options.fileOptions.logLevel) {
+            // Ensure the project name is provided
+            if (!options.nameOfProject || options.nameOfProject.trim() === '') {
+                throw new Error("File logging is enabled but no project name was provided.");
             }
+            // Find index of the provided log level in the enum array
+            const providedLevelIndex = allLevels.indexOf(options.fileOptions.logLevel);
+            // Determine levels to include based on the provided log level
+            const levelsToInclude = allLevels.slice(0, providedLevelIndex + 1);
+            // Ensure 'http' log level is always included if not already
+            if (!levelsToInclude.includes(LogLevel_enum_1.LogLevel.HTTP)) {
+                levelsToInclude.push(LogLevel_enum_1.LogLevel.HTTP);
+            }
+            // Create a transport for each level
+            levelsToInclude.forEach(logLevel => {
+                const logType = getLogTypeFromLevel.getLogType(logLevel);
+                const fileName = `${options.nameOfProject}/${logType}/${logLevel}/${options.nameOfProject}-${logType}-${logLevel}`;
+                const loggerFormat = formatLog.formatter(options.logFormat, logLevel);
+                transportList.push(new winston_daily_rotate_file_1.default({
+                    filename: fileName,
+                    datePattern: options.fileOptions.datePattern,
+                    zippedArchive: options.fileOptions.zippedArchive,
+                    maxSize: options.fileOptions.maxSize,
+                    maxFiles: options.fileOptions.maxFiles,
+                    level: logLevel,
+                    format: loggerFormat,
+                }));
+            });
         }
         return transportList;
     }

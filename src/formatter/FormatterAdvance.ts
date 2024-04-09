@@ -4,8 +4,10 @@ import { LogFormat } from "./enums/logFormat.enum";
 import { LogLevel } from "../logger/enums/LogLevel.enum";
 
 export class FormatLogWithBifurcation implements IFormatter { 
-    formatter (logFormat: LogFormat , logLevel?: LogLevel): any {
-
+    formatter (logFormat?: LogFormat , logLevel?: LogLevel): any {
+        if (!logFormat) {
+            logFormat = LogFormat.TEXT;
+          }
         // This function filters logs and only keeps ones that are of specified log level
         const filterLevel = (level: LogLevel) => format((info) => {
             return info.level === level ? info : false;

@@ -5,6 +5,9 @@ const winston_1 = require("winston");
 const logFormat_enum_1 = require("./enums/logFormat.enum");
 class FormatLogWithBifurcation {
     formatter(logFormat, logLevel) {
+        if (!logFormat) {
+            logFormat = logFormat_enum_1.LogFormat.TEXT;
+        }
         // This function filters logs and only keeps ones that are of specified log level
         const filterLevel = (level) => (0, winston_1.format)((info) => {
             return info.level === level ? info : false;

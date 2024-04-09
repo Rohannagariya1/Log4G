@@ -32,7 +32,7 @@ class GroMoLogger {
     }
     initializeLogger(transportList, logLevel = LogLevel_enum_1.LogLevel.INFO) {
         return (0, winston_1.createLogger)({
-            level: logLevel, // REVIEW: Check how winston reacts if level is undefined - done it will use info as default log level
+            level: logLevel,
             transports: transportList,
         });
     }

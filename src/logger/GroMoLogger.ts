@@ -38,7 +38,7 @@ class GroMoLogger implements ILogger {
 
     private initializeLogger(transportList: any[], logLevel : LogLevel = LogLevel.INFO): Logger {
         return createLogger({
-            level: logLevel, // REVIEW: Check how winston reacts if level is undefined - done it will use info as default log level
+            level: logLevel, 
             transports: transportList,
         });
     }

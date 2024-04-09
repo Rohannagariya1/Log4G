@@ -15,15 +15,7 @@ import { TransporterType } from "../../transport-config/enums/TransporterType.en
 export interface ILoggerOptions {
     enableStdout?: boolean;
     nameOfProject: string;
-    fileOptions?: Array<{
-      enableFile: boolean;
-     
-      logLevel: LogLevel;
-      datePattern: string,
-      zippedArchive: boolean,
-      maxSize: string,
-      maxFiles: string,
-    }> | 
+    fileOptions: 
     {
       enableFile: boolean;
       logLevel: LogLevel;
