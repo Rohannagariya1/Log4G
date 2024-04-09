@@ -42,10 +42,10 @@ export class TransportConfiguratorWithBifurcation implements ITransportConfigura
 
                     transportList.push(new DailyRotateFile({
                         filename: fileName,
-                        datePattern: 'YYYY-MM-DD',
-                        zippedArchive: false,
-                        maxSize: '20m', // REVIEW: move to config
-                        maxFiles: '14d',
+                        datePattern: fileList.datePattern,
+                        zippedArchive: fileList.zippedArchive,
+                        maxSize: fileList.maxFiles, // REVIEW: move to config
+                        maxFiles: fileList.maxFiles,
                         level: fileList.logLevel,
                         format: loggerFormat,
                     }));

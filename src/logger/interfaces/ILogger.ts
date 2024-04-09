@@ -1,5 +1,5 @@
 export interface ILogger {
-    info(message: string | Error, context?: string, id?: string): void;
+    info(arg: any): void;
     warn(message: string | Error, context?: string, id?: string): void;
     error(message: string | Error, context?: string, id?: string): void;
     http(message: string | Error, context?: string, id?: string): void;

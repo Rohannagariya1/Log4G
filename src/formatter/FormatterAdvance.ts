@@ -34,6 +34,8 @@ export class FormatLogWithBifurcation implements IFormatter {
                     }
                     logObject.path = info.path || '',
                     logObject.parsedStack= info.parsedStack ? JSON.stringify(info.parsedStack) : '',
+                    logObject.context = info.context || ' ',
+                    logObject.id = info.id ||' ',
                     logObject.message = info.message;
                    
                    
@@ -51,7 +53,7 @@ export class FormatLogWithBifurcation implements IFormatter {
                 if (info.parsedStack) {
                     parseStackMessage = ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
                 }
-                return  baseMsg + '  ' + traceId + parseStackMessage + contextMessage + id  + message ;
+                return  `${baseMsg} traceId :${traceId}  ${parseStackMessage} context:${contextMessage} id:${id} message:${message}` ;
                 }
             ));
             break;

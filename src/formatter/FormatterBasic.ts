@@ -42,7 +42,7 @@ export class FormatLogBasic implements IFormatter {
                     if (info.parsedStack) {
                         parseStackMessage = ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
                     }
-                    return baseMsg + ' ' + traceId + parseStackMessage + id + contextMessage  + message;
+                    return  `${baseMsg} traceId :${traceId}  ${parseStackMessage} context:${contextMessage} id:${id} message:${message}` ;
                 }));
                 break;
             default:

@@ -5,4 +5,6 @@ interface LogObject {
     path?: string; 
     parsedStack?: string; 
     message?: string;
+    context?: string;
+    id?: string;
   }

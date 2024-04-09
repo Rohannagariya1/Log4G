@@ -37,10 +37,10 @@ class TransportConfiguratorWithBifurcation {
                     const fileName = `${options.nameOfProject}/${logType}/${fileList.logLevel}/${options.nameOfProject}-${logType}-${fileList.logLevel}`;
                     transportList.push(new winston_daily_rotate_file_1.default({
                         filename: fileName,
-                        datePattern: 'YYYY-MM-DD',
-                        zippedArchive: false,
-                        maxSize: '20m', // REVIEW: move to config
-                        maxFiles: '14d',
+                        datePattern: fileList.datePattern,
+                        zippedArchive: fileList.zippedArchive,
+                        maxSize: fileList.maxFiles, // REVIEW: move to config
+                        maxFiles: fileList.maxFiles,
                         level: fileList.logLevel,
                         format: loggerFormat,
                     }));

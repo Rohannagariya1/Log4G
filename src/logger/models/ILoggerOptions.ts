@@ -26,7 +26,6 @@ export interface ILoggerOptions {
     }> | 
     {
       enableFile: boolean;
-     
       logLevel: LogLevel;
       datePattern: string,
       zippedArchive: boolean,

@@ -24,10 +24,10 @@ class TransportConfiguratorBasic {
             const fileName = `${process.env.HOME}/.gromo-logger/${options.nameOfProject}-logs`;
             transportList.push(new winston_daily_rotate_file_1.default({
                 filename: fileName,
-                datePattern: 'YYYY-MM-DD',
-                zippedArchive: false,
-                maxSize: '20m', // REVIEW: move to config
-                maxFiles: '14d', // REVIEW: move to config
+                datePattern: options.fileOptions.datePattern,
+                zippedArchive: options.fileOptions.zippedArchive,
+                maxSize: options.fileOptions.maxSize,
+                maxFiles: options.fileOptions.maxFiles,
                 format: loggerFormat,
             }));
         }
