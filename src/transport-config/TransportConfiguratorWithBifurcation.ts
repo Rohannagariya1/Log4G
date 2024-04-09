@@ -43,7 +43,7 @@ export class TransportConfiguratorWithBifurcation implements ITransportConfigura
         const levelsToInclude = allLevels.slice(0, providedLevelIndex + 1);
         
         // Ensure 'http' log level is always included if not already
-        if (!levelsToInclude.includes(LogLevel.HTTP)) {
+        if(options.enableAccessLog) {
             levelsToInclude.push(LogLevel.HTTP);
         }
 
@@ -51,7 +51,7 @@ export class TransportConfiguratorWithBifurcation implements ITransportConfigura
         // Create a transport for each level
         levelsToInclude.forEach(logLevel => {
             const logType = getLogTypeFromLevel.getLogType(logLevel);
-            const fileName = `${options.nameOfProject}/${logType}/${logLevel}/${options.nameOfProject}-${logType}-${logLevel}`;
+            const fileName = `${process.env.HOME}/.gromo-logger/${options.nameOfProject}/${logType}/${options.nameOfProject}-${logType}-${logLevel}`;
             const loggerFormat = formatLog.formatter(options.logFormat, logLevel);
 
             transportList.push(new DailyRotateFile({

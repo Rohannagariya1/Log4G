@@ -22,18 +22,19 @@ export class LoggerInterceptorNest implements NestInterceptor {
     const networkInterfaces = os.networkInterfaces();
     
     const extractedIPs = extractIPAddress.extractIP(networkInterfaces);
-    const stringifiedIPs = JSON.stringify(extractedIPs, null, 2);
+    const IPAddress = JSON.stringify(extractedIPs);
     
     return new Observable(observer => {
-      asyncLocalStorage.run({ traceId }, () => {
+      asyncLocalStorage.run({ traceId , IPAddress}, () => {
         next.handle().pipe(
           tap(
             (response) => observer.next(response),
             (error) => observer.error(error)
           ),
           finalize(() => {
+            const statusCode = response.statusCode;
             const responseTime = Date.now() - start;
-            logger.http(`[${method}] ${path} - ${responseTime}ms - IP: ${requesterIp} - , HostIp - ${stringifiedIPs}`);
+            logger.http(`[${method}] ${path} - ${responseTime}ms - IP: ${requesterIp} - responseCode :${statusCode} , HostIp - ${IPAddress}`);
           })
         ).subscribe({
           complete: () => observer.complete(),

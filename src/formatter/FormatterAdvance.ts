@@ -34,6 +34,7 @@ export class FormatLogWithBifurcation implements IFormatter {
                     if (info.traceId) {
                         logObject.traceId = info.traceId;
                     }
+                    logObject.IPAddress = info.IPAddress
                     logObject.path = info.path || '',
                     logObject.parsedStack= info.parsedStack ? JSON.stringify(info.parsedStack) : '',
                     logObject.context = info.context || ' ',
@@ -50,12 +51,13 @@ export class FormatLogWithBifurcation implements IFormatter {
                 let message = info.message;
                 let contextMessage = info.context || ''; 
                 let traceId = info.traceId || '';
+                let IPAddress = info.IPAddress || '';
                 let id = info.id || '';
                let parseStackMessage = '';
                 if (info.parsedStack) {
                     parseStackMessage = ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
                 }
-                return  `${baseMsg} traceId :${traceId}  ${parseStackMessage} context:${contextMessage} id:${id} message:${message}` ;
+                return  `${baseMsg} traceId :${traceId} HostIP :${IPAddress} ${parseStackMessage} context:${contextMessage} id:${id} message:${message}` ;
                 }
             ));
             break;

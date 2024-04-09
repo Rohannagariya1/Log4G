@@ -95,7 +95,7 @@ class GroMoLogger implements ILogger {
     
         const logData: { [key: string]: any } = { context };
         logData.traceId = logContext?.traceId;
-
+        logData.IPAddress = logContext?.IPAddress;
         let logMessage: string;
   
         if (message instanceof Error) {

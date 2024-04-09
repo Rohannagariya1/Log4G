@@ -7,4 +7,5 @@ interface LogObject {
     message?: string;
     context?: string;
     id?: string;
+    IPAddress?: string;
   }

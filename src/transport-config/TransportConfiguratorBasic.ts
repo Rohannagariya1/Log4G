@@ -3,14 +3,15 @@ import DailyRotateFile from 'winston-daily-rotate-file';
 import { ILoggerOptions } from '../logger/models/ILoggerOptions';
 import { ITransportConfigurator } from './interfaces/ITransportconfigurator';
 import { FormatLogBasic } from '../formatter/FormatterBasic';
-
+import { LogLevel } from '../logger/enums/LogLevel.enum';
+import { FormatLogWithBifurcation } from '../formatter/FormatterAdvance';
 export class TransportConfiguratorBasic implements ITransportConfigurator {
     configureTransports(options: ILoggerOptions): any[] {
         const transportList = [];
    
         const formatLog = new FormatLogBasic();
-
-        const loggerFormat = formatLog.formatter(options.logFormat);
+        const advanceFormatLog = new FormatLogWithBifurcation();
+        const loggerFormat = formatLog.formatter(options.logFormat,LogLevel.HTTP);
         if (options.enableStdout) {
   
             transportList.push(new transports.Console({
@@ -18,13 +19,13 @@ export class TransportConfiguratorBasic implements ITransportConfigurator {
             }));
         }
 
-        if (options.fileOptions && !Array.isArray(options.fileOptions) && options.fileOptions.enableFile) {
+        if (options.fileOptions && options.fileOptions.enableFile) {
 
             if (!options.nameOfProject || options.nameOfProject.trim() === '') {
                 throw new Error("File logging is enabled but no project name was provided.");
             }
 
-            const fileName = `${process.env.HOME}/.gromo-logger/${options.nameOfProject}-logs`;
+            const fileName = `${process.env.HOME}/.gromo-logger/APPLICATION_LOG/${options.nameOfProject}-logs`;
   
             transportList.push(new DailyRotateFile({
                 filename: fileName,
@@ -37,6 +38,26 @@ export class TransportConfiguratorBasic implements ITransportConfigurator {
         } else {
             throw new Error("Intialise the fileOption config properly in logger");
         }
+        if(options.enableAccessLog){
+            const advaceFormatter = advanceFormatLog.formatter(options.logFormat,LogLevel.HTTP);
+            if (!options.nameOfProject || options.nameOfProject.trim() === '') {
+                throw new Error("File logging is enabled but no project name was provided.");
+            }
+
+            const fileName = `${process.env.HOME}/.gromo-logger/ACCESS_LOG/${options.nameOfProject}-logs`;
+  
+            transportList.push(new DailyRotateFile({
+                filename: fileName,
+                datePattern: options.fileOptions.datePattern,
+                zippedArchive: options.fileOptions.zippedArchive,
+                maxSize: options.fileOptions.maxSize, 
+                maxFiles: options.fileOptions.maxFiles,
+                format: advaceFormatter,
+            }));
+        }
+        
+
+
     
         return transportList;
     

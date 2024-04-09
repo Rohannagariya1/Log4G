@@ -29,5 +29,6 @@ export interface ILoggerOptions {
     logFormat?: LogFormat;
     transporterType?: TransporterType;
     overrideConsole?: boolean;
+    enableAccessLog?: boolean;
 }
 // Review: Add difference between between 2 logLevel in ReadMe.md file as documentation.
