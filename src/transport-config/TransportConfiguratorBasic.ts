@@ -28,7 +28,7 @@ export class TransportConfiguratorBasic implements ITransportConfigurator {
             const fileName = `${process.env.HOME}/.gromo-logger/APPLICATION_LOG/${options.nameOfProject}-logs`;
   
             transportList.push(new DailyRotateFile({
-                filename: fileName,
+                filename: `APPLICATION_LOG/${options.nameOfProject}-logs`,
                 datePattern: options.fileOptions.datePattern,
                 zippedArchive: options.fileOptions.zippedArchive,
                 maxSize: options.fileOptions.maxSize, 
@@ -47,7 +47,7 @@ export class TransportConfiguratorBasic implements ITransportConfigurator {
             const fileName = `${process.env.HOME}/.gromo-logger/ACCESS_LOG/${options.nameOfProject}-logs`;
   
             transportList.push(new DailyRotateFile({
-                filename: fileName,
+                filename: `ACCESS_LOG/${options.nameOfProject}-logs`,
                 datePattern: options.fileOptions.datePattern,
                 zippedArchive: options.fileOptions.zippedArchive,
                 maxSize: options.fileOptions.maxSize, 
