@@ -14,18 +14,10 @@ import { TransporterType } from "../../transport-config/enums/TransporterType.en
 
 export interface ILoggerOptions {
     enableStdout?: boolean;
-    fileOptions?: Array<{
-      enableFile: boolean;
-      nameOfProject: string;
-      logLevel: LogLevel;
-      datePattern: string,
-      zippedArchive: boolean,
-      maxSize: string,
-      maxFiles: string,
-    }> | 
+    nameOfProject: string;
+    fileOptions: 
     {
       enableFile: boolean;
-      nameOfProject: string;
       logLevel: LogLevel;
       datePattern: string,
       zippedArchive: boolean,
@@ -37,5 +29,6 @@ export interface ILoggerOptions {
     logFormat?: LogFormat;
     transporterType?: TransporterType;
     overrideConsole?: boolean;
+    enableAccessLog?: boolean;
 }
 // Review: Add difference between between 2 logLevel in ReadMe.md file as documentation.
