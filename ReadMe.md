@@ -37,3 +37,26 @@ npm install @gromo-fintech/log4g.js
 # Configuration
 
 gromo-log4g.js can configured to your needs. It is configured when initializing 
+
+# Authors
+
+## Rohan Nagariya
+Intern - SDE
+
+Rohan Nagariya is an intern at GroMo who has come from DTU and has been the main person who write code for this package.
+
+- Email: rohan.nagariya@gromo.in
+
+## Paramdeep Singh Obheroi
+Senior Software Engineer
+
+Paramdeep, a Senior Engineer at Gromo, designed the package and guided Rohan in this project.
+
+- Email: paramdeep.obheroi@gromo.in
+
+## Sahej Aggarwal
+Engineering Manager
+
+Sahej is the Engineering Manager at GroMo who has initiated the project.
+
+- Email: sahej.aggarwarl@gromo.in
