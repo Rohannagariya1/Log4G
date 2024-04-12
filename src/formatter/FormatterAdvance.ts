@@ -2,9 +2,13 @@ import { format} from "winston";
 import { IFormatter } from "./interfaces/IFormatter";
 import { LogFormat } from "./enums/logFormat.enum";
 import { LogLevel } from "../logger/enums/LogLevel.enum";
+import { GetJsonFormat } from "./GetJsonFormat";
+import { GetTextFormat } from "./GetTextFormat";
 
 export class FormatLogWithBifurcation implements IFormatter { 
     formatter (logFormat?: LogFormat , logLevel?: LogLevel): any {
+        let getJsonFormat : GetJsonFormat = new GetJsonFormat();
+        let getTextFormat : GetTextFormat = new GetTextFormat();
         if (!logFormat) {
             logFormat = LogFormat.TEXT;
           }
@@ -24,43 +28,11 @@ export class FormatLogWithBifurcation implements IFormatter {
   
         switch (logFormat) {
             case LogFormat.JSON:
-                formatComponents.push(format.printf((info) => {
-
-                    const logObject : LogObject= {
-                        timestamp: info.timestamp,
-                        level: info.level,
-                        
-                    };
-                    if (info.traceId) {
-                        logObject.traceId = info.traceId;
-                    }
-                    logObject.IPAddress = info.IPAddress
-                    logObject.path = info.path || '',
-                    logObject.parsedStack= info.parsedStack ? JSON.stringify(info.parsedStack) : '',
-                    logObject.context = info.context || ' ',
-                    logObject.id = info.id ||' ',
-                    logObject.message = info.message;
-                   
-                   
-                    return JSON.stringify(logObject);
-                }));
+                formatComponents.push(format.printf((info) =>  getJsonFormat.formatLog(info)));
                 break;
             case LogFormat.TEXT:
-                formatComponents.push(format.printf((info) => {
-                let baseMsg = `${info.timestamp} ${info.level}`;
-                let message = info.message;
-                let contextMessage = info.context || ''; 
-                let traceId = info.traceId || '';
-                let IPAddress = info.IPAddress || '';
-                let id = info.id || '';
-               let parseStackMessage = '';
-                if (info.parsedStack) {
-                    parseStackMessage = ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
-                }
-                return  `${baseMsg} traceId :${traceId} HostIP :${IPAddress} ${parseStackMessage} context:${contextMessage} id:${id} message:${message}` ;
-                }
-            ));
-            break;
+                formatComponents.push(format.printf((info) => getTextFormat.formatLog(info)));
+                break;
             default:
                 throw new Error("Unsupported Log Format: " + logFormat);
         }

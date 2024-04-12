@@ -1,7 +1,8 @@
 import { NetworkInterfaceInfo, networkInterfaces } from 'os';
-export class ExtractIPAddress {
+import { IExtractIPAddress } from './interfaces/IExtractIPAddress';
+export class ExtractIPAddress implements IExtractIPAddress {
 
-    extractIP(networkInterfaces: { [interfaceName: string]: NetworkInterfaceInfo[] }) {
+    extractIP(networkInterfaces: { [interfaceName: string]: NetworkInterfaceInfo[] }):any {
 
       let enInterfaces: string[] = [];
       let ethInterfaces: string[] = [];

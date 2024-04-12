@@ -5,13 +5,14 @@ import { ITransportConfigurator } from './interfaces/ITransportconfigurator';
 import { FormatLogBasic } from '../formatter/FormatterBasic';
 import { LogLevel } from '../logger/enums/LogLevel.enum';
 import { FormatLogWithBifurcation } from '../formatter/FormatterAdvance';
+import { IFormatter } from '../formatter/interfaces/IFormatter';
 export class TransportConfiguratorBasic implements ITransportConfigurator {
     configureTransports(options: ILoggerOptions): any[] {
         const transportList = [];
    
-        const formatLog = new FormatLogBasic();
-        const advanceFormatLog = new FormatLogWithBifurcation();
-        const loggerFormat = formatLog.formatter(options.logFormat,LogLevel.HTTP);
+        const formatLog : IFormatter= new FormatLogBasic();
+        const advanceFormatLog : IFormatter = new FormatLogWithBifurcation();
+        const loggerFormat  = formatLog.formatter(options.logFormat,LogLevel.HTTP);
         if (options.enableStdout) {
   
             transportList.push(new transports.Console({

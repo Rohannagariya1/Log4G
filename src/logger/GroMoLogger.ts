@@ -1,4 +1,4 @@
-import { createLogger, Logger } from 'winston';
+import winston, { createLogger, Logger } from 'winston';
 import { ILogger } from './interfaces/ILogger';
 import { ILoggerOptions } from './models/ILoggerOptions';
 import { ErrorStackParser } from '../error-stack-parser/ErrorStackParser';
@@ -12,7 +12,11 @@ import { InputHandler } from './InputHandler';
 
 class GroMoLogger implements ILogger {
     private projectName : string='';
-    private logger: Logger | undefined = undefined;
+    public logger: Logger = createLogger({
+        transports: [
+          new winston.transports.Console()
+        ]
+      });;
     private isLoggingDisabled: boolean = false;
     private errorStackParser: ErrorStackParser = new ErrorStackParser();
     private errorStackHelper : ErrorHelper = new ErrorHelper();
@@ -55,42 +59,48 @@ class GroMoLogger implements ILogger {
 
   
     public warn(...args:any[]): void {
-        const { message, context , id} = this.inputHandler.processArgs(args);
-        const error = this.errorStackHelper.getStackTrace();
+        let { message, context , id,error} = this.inputHandler.processArgs(args);
+        if(!error){
+         error = this.errorStackHelper.getStackTrace();}
         this.logMessage('warn', message, error, context, id);
     }
     public info(...args:any[]): void {
-        const { message, context , id} = this.inputHandler.processArgs(args);
-        const error = this.errorStackHelper.getStackTrace();
+        let { message, context , id,error} = this.inputHandler.processArgs(args);
+        if(!error){
+         error = this.errorStackHelper.getStackTrace();}
         this.logMessage('info', message, error, context, id);
     }
   // In error we dont have to stringify the object
   // I have to discuss the format for the logging in error
     public error(...args:any[]): void {
-        const { message, context , id} = this.inputHandler.processArgs(args);
-        const error = this.errorStackHelper.getStackTrace();
+        let { message, context , id,error} = this.inputHandler.processArgs(args);
+        if(!error){
+         error = this.errorStackHelper.getStackTrace();}
         this.logMessage('error', message, error, context, id);
     }
   
     public http(...args:any[]): void {
-        const { message, context , id} = this.inputHandler.processArgs(args);
-        const error = this.errorStackHelper.getStackTrace();
+        let { message, context , id,error} = this.inputHandler.processArgs(args);
+        if(!error){
+         error = this.errorStackHelper.getStackTrace();}
         this.logMessage('http', message, error, context, id);
     }
   
     public verbose(...args:any[]): void {
-        const { message, context , id} = this.inputHandler.processArgs(args);
-        const error = this.errorStackHelper.getStackTrace();
+        let { message, context , id,error} = this.inputHandler.processArgs(args);
+        if(!error){
+         error = this.errorStackHelper.getStackTrace();}
         this.logMessage('verbose', message, error, context, id);
     }
   
     public debug(...args:any[]): void {
-        const { message, context , id} = this.inputHandler.processArgs(args);
-        const error = this.errorStackHelper.getStackTrace();
+        let { message, context , id,error} = this.inputHandler.processArgs(args);
+        if(!error){
+         error = this.errorStackHelper.getStackTrace();}
         this.logMessage('debug', message, error, context, id);
     }
   
-    private logMessage(level: string, message: string | Error,error?: Error, context?: string, id?: string): void {
+    private logMessage(level: string, message: string ,error?: Error, context?: string, id?: string): void {
         if (this.isLoggingDisabled) return;
 
             
@@ -105,21 +115,26 @@ class GroMoLogger implements ILogger {
         logData.IPAddress = logContext?.IPAddress;
         let logMessage: string;
   
-        if (message instanceof Error) {
-            logMessage = message.message;
-            if (message.stack) {
-                logData.parsedStack = this.errorStackParser.parse(message.stack,this.projectName);
-            }
-      } else {
             logMessage = message;
-            if (error && error.stack) {
-                logData.parsedStack = this.errorStackParser.parse(error.stack,this.projectName);
-            }
+            if (error) {
+                if (error.message) {
+
+                    logMessage += ` - Error: ${error.message}`;
+                }
+                if (error.stack) {
+                    logData.parsedStack = this.errorStackParser.parse(error.stack,this.projectName);
+                }
+            
         }
+    
   
-      if (id) logData.id = id;
-     if(this.logger)
-      this.logger.log(level, logMessage, logData);
+        if (id) logData.id = id;
+        if(this.logger)
+        this.logger.log(level, logMessage, logData);
+}
+
+public getLoggerForTest(): Logger | undefined {
+    return this.logger;
 }
 
 }

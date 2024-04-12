@@ -5,11 +5,12 @@ import { tap, catchError, finalize } from 'rxjs/operators';
 import { asyncLocalStorage } from './ContextStorage';
 import logger from '../logger/GroMoLogger'
 import { ExtractIPAddress } from './ExtractIPAddress';
+import { IExtractIPAddress } from './interfaces/IExtractIPAddress';
 
 @Injectable()
 export class LoggerInterceptorNest implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const extractIPAddress : ExtractIPAddress = new ExtractIPAddress();
+    const extractIPAddress : IExtractIPAddress = new ExtractIPAddress();
     const start = Date.now();
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest();
@@ -43,34 +44,6 @@ export class LoggerInterceptorNest implements NestInterceptor {
     });
   }
 
-  //   return new Observable(observer => {
-  //     // No need to use `getStore()` and `set()` right after `run()` because the object is already set as the context
-  //     asyncLocalStorage.run({ traceId }, () => {
-  //       next.handle().pipe(
-
-  //         tap(
-  //           (response) => observer.next(response),
-  //           (error) => observer.error(error)
-  //         )
-  //       ).subscribe({
-  //         complete: () => observer.complete(),
-  //       });
-  //     });
-  //   });
-  // }
-    // Initialize context for this async execution scope with traceId, requesterIp, and path
-    // asyncLocalStorage.run({ traceId}, () => {
-
-    //   // Now, return the observable directly. NestJS will subscribe to it.
-    //   return next.handle().pipe(
-    //     finalize(() => {
-    //       const responseTime = Date.now() - start;
-    //       logger.http(`[${method}] ${path} - ${responseTime}ms - Trace ID: ${traceId} - IP: ${requesterIp} - , HostIp - ${stringifiedIPs}`);
-    //     })
-    //   );
-    // })
-
-    // return next.handle();
   
 
   generateTraceId(): string {

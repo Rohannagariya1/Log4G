@@ -7,12 +7,13 @@ import { LogFormat } from '../formatter/enums/logFormat.enum';
 import { LogType } from './enums/LogType.enum';
 import { GetLogTypeFromLevel } from './GetLogTypeFromLevel';
 import { LogLevel } from '../logger/enums/LogLevel.enum';
+import { IFormatter } from '../formatter/interfaces/IFormatter';
 
 // Review: Comment this code to be more understandable to others
 export class TransportConfiguratorWithBifurcation implements ITransportConfigurator {
     configureTransports(options: ILoggerOptions): any[] {
         let transportList = [];
-        const formatLog = new FormatLogWithBifurcation();
+        const formatLog : IFormatter = new FormatLogWithBifurcation();
         const getLogTypeFromLevel : GetLogTypeFromLevel = new GetLogTypeFromLevel();
 
         if (!options.logFormat) {
@@ -37,10 +38,10 @@ export class TransportConfiguratorWithBifurcation implements ITransportConfigura
         }
 
         // Find index of the provided log level in the enum array
-        const providedLevelIndex = allLevels.indexOf(options.fileOptions.logLevel);
+        const providedLevelIndex = allLevels?.indexOf(options?.fileOptions?.logLevel);
         
         // Determine levels to include based on the provided log level
-        const levelsToInclude = allLevels.slice(0, providedLevelIndex + 1);
+        const levelsToInclude = allLevels?.slice(0, providedLevelIndex + 1);
         
         // Ensure 'http' log level is always included if not already
         if(options.enableAccessLog) {
