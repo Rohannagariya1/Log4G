@@ -1,5 +1,5 @@
 {
-  "name": "my-logger-package",
+  "name": "log4g.js",
   "version": "1.0.0",
   "description": "",
   "main": "dist/logger/GroMoLogger.js",
