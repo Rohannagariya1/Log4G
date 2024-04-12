@@ -56,7 +56,7 @@ export class TransportConfiguratorWithBifurcation implements ITransportConfigura
             const loggerFormat = formatLog.formatter(options.logFormat, logLevel);
 
             transportList.push(new DailyRotateFile({
-                filename: fileName,
+                filename: `${options.nameOfProject}/${logType}/${options.nameOfProject}-${logType}-${logLevel}`,
                 datePattern: options.fileOptions.datePattern,
                 zippedArchive: options.fileOptions.zippedArchive,
                 maxSize: options.fileOptions.maxSize, 

@@ -51,9 +51,9 @@ class GroMoLogger implements ILogger {
 
     private overrideConsole() {
         console.log = (...args: any[]) => this.info(args);
-        console.error = (...args: any[]) => this.error(args.join(' '));
-        console.warn = (...args: any[]) => this.warn(args.join(' '));
-        console.debug = (...args: any[]) => this.debug(args.join(' '));
+        console.error = (...args: any[]) => this.error(args);
+        console.warn = (...args: any[]) => this.warn(args);
+        console.debug = (...args: any[]) => this.debug(args);
 
     }
 
