@@ -1,6 +1,5 @@
 import { IGetOutputFormat } from "./interfaces/IGetOutputFormat";
 
-    
  export class GetTextFormat implements IGetOutputFormat {   
     formatLog(info: any): string {
         let baseMsg = `${info.timestamp} ${info.level}`;
