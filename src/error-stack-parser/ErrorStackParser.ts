@@ -48,8 +48,9 @@ export class ErrorStackParser implements IErrorStackParser {
 
         // here we format our output in a more understandable format
         const parts = matchResult?.[1]?.split(':') || [];
-        const filePath = parts?.slice(0, -1)?.join(':'); // Review: Add null checks here
+        const filePath = parts?.join(':'); // Review: Add null checks here
         const lineNumber = parseInt(parts?.slice(-2)[0]);
+        
         return { filePath, lineNumber, className, methodName };
     }
 }

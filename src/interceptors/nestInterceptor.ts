@@ -23,7 +23,6 @@ export class LoggerInterceptorNest implements NestInterceptor {
     const path = request.url;
     const method = request.method; // HTTP method (GET, POST, PUT, DELETE)
     const networkInterfaces = os.networkInterfaces();
-    request.traceId = traceId;
     const extractedIPs = extractIPAddress.extractIP(networkInterfaces);
     const IPAddress = JSON.stringify(extractedIPs);
     
