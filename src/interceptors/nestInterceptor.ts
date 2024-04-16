@@ -5,10 +5,14 @@ import { tap, catchError, finalize } from 'rxjs/operators';
 import { asyncLocalStorage } from './ContextStorage';
 import logger from '../logger/GroMoLogger'
 import { MetaDataHelper } from './MetaDataHelper';
-@Injectable()
+import { IMetaDataHelper } from './interfaces/IMetaDataHelper';
+
 export class LoggerInterceptorNest implements NestInterceptor {
 
-  constructor(private readonly metaDataHelper: MetaDataHelper) {}
+  private metaDataHelper: IMetaDataHelper;
+  constructor() {
+    this.metaDataHelper = new MetaDataHelper();
+  }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const start = Date.now();
