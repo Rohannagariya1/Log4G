@@ -4,27 +4,26 @@ const os = require('os');
 import { tap, catchError, finalize } from 'rxjs/operators';
 import { asyncLocalStorage } from './ContextStorage';
 import logger from '../logger/GroMoLogger'
-import { ExtractIPAddress } from './ExtractIPAddress';
-import { IExtractIPAddress } from './interfaces/IExtractIPAddress';
-
+import { MetaDataHelper } from './MetaDataHelper';
 @Injectable()
 export class LoggerInterceptorNest implements NestInterceptor {
+
+  constructor(private readonly metaDataHelper: MetaDataHelper) {}
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const extractIPAddress : IExtractIPAddress = new ExtractIPAddress();
     const start = Date.now();
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest();
    
     const response = httpContext.getResponse();
 
-    const traceId = request.headers['trace-id'] || this.generateTraceId();
+    const traceId = request.headers['trace-id'] || this.metaDataHelper.generateTraceId();
     request.headers['trace-id'] = traceId; //  review this change , Im updating the trace id in the header of the request 
     const requesterIp = request.ip; // Assuming this gets the client IP. For real client IP behind proxy, use request.headers['x-forwarded-for'] || request.ip
     const path = request.url;
     const method = request.method; // HTTP method (GET, POST, PUT, DELETE)
     const networkInterfaces = os.networkInterfaces();
-    request.traceId = traceId;
-    const extractedIPs = extractIPAddress.extractIP(networkInterfaces);
+    const extractedIPs = this.metaDataHelper.extractIP(networkInterfaces);
     const IPAddress = JSON.stringify(extractedIPs);
     
     return new Observable(observer => {
@@ -56,16 +55,5 @@ export class LoggerInterceptorNest implements NestInterceptor {
         );
       });
     });
-  }
-
-  
-
-  generateTraceId(): string {
-    const epochTime = Date.now().toString();
-    const last4Digits = epochTime.substring(epochTime.length - 4);
-
-    const fourRandomDigits = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-
-    return `${last4Digits}${fourRandomDigits}`;
   }
 }
