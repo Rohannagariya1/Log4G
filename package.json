@@ -1,13 +1,20 @@
 {
   "name": "@gromo-fintech/log4g",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "`gromo-log4g-js` is a versatile and easy-to-use logging framework for JavaScript and Nest.js applications. It provides powerful logging capabilities to help developers track and debug their applications efficiently.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint"
   },
+  "files": [
+    "dist"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -30,6 +37,7 @@
     "@types/winston": "^2.4.4",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "tslint": "^6.1.3"
   }
 }
