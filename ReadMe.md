@@ -1,4 +1,4 @@
-# @gromo-fintech/gromo-log4g-js
+# @gromo-fintech/log4g
 
 `gromo-log4g-js` is a versatile and easy-to-use logging framework for JavaScript and Nest.js applications. It provides powerful logging capabilities to help developers track and debug their applications efficiently.
 
