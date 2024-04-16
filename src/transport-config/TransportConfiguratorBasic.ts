@@ -29,16 +29,14 @@ export class TransportConfiguratorBasic implements ITransportConfigurator {
             const fileName = `${process.env.HOME}/.gromo-logger/APPLICATION_LOG/${options.nameOfProject}-logs`;
   
             transportList.push(new DailyRotateFile({
-                filename: `APPLICATION_LOG/${options.nameOfProject}-logs`,
+                filename: fileName,
                 datePattern: options.fileOptions.datePattern,
                 zippedArchive: options.fileOptions.zippedArchive,
                 maxSize: options.fileOptions.maxSize, 
-                maxFiles: options.fileOptions.maxFiles,
+                maxFiles: options.fileOptions.maxDays,
                 format: loggerFormat,
             }));
-        } else {
-            throw new Error("Intialise the fileOption config properly in logger");
-        }
+        } 
         if(options.enableAccessLog){
             const advaceFormatter = advanceFormatLog.formatter(options.logFormat,LogLevel.HTTP);
             if (!options.nameOfProject || options.nameOfProject.trim() === '') {
@@ -48,11 +46,11 @@ export class TransportConfiguratorBasic implements ITransportConfigurator {
             const fileName = `${process.env.HOME}/.gromo-logger/ACCESS_LOG/${options.nameOfProject}-logs`;
   
             transportList.push(new DailyRotateFile({
-                filename: `ACCESS_LOG/${options.nameOfProject}-logs`,
+                filename: fileName,
                 datePattern: options.fileOptions.datePattern,
                 zippedArchive: options.fileOptions.zippedArchive,
                 maxSize: options.fileOptions.maxSize, 
-                maxFiles: options.fileOptions.maxFiles,
+                maxFiles: options.fileOptions.maxDays,
                 format: advaceFormatter,
             }));
         }

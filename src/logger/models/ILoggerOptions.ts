@@ -22,7 +22,7 @@ export interface ILoggerOptions {
       datePattern: string,
       zippedArchive: boolean,
       maxSize: string,
-      maxFiles: string,
+      maxDays: string,
 
     };
     logLevel?: LogLevel;
