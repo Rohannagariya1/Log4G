@@ -4,7 +4,6 @@ import { ILoggerOptions } from '../logger/models/ILoggerOptions';
 import { FormatLogWithBifurcation } from '../formatter/FormatterAdvance';
 import { ITransportConfigurator } from './interfaces/ITransportconfigurator';
 import { LogFormat } from '../formatter/enums/logFormat.enum';
-import { LogType } from './enums/LogType.enum';
 import { GetLogTypeFromLevel } from './GetLogTypeFromLevel';
 import { LogLevel } from '../logger/enums/LogLevel.enum';
 import { IFormatter } from '../formatter/interfaces/IFormatter';

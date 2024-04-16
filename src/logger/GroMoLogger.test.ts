@@ -2,7 +2,10 @@ import logger from './GroMoLogger';
 import { TransporterType } from '../transport-config/enums/TransporterType.enum';
 import { LogLevel } from './enums/LogLevel.enum';
 import { LogFormat } from '../formatter/enums/logFormat.enum';
-import { Logger } from 'winston';
+import winston, { Logger } from 'winston';
+import { ILoggerOptions } from './models/ILoggerOptions';
+import { TransportConfiguratorFactory } from '../transport-config/TransporterFactory';
+import { asyncLocalStorage } from '../interceptors/ContextStorage';
 const fs = require('fs');
 const util = require('util');
 const readFile = util.promisify(fs.readFile);
@@ -67,9 +70,63 @@ it('logs a simple verbose message', () => {
     logger.verbose("Hello, world!");
     expect(spy).toHaveBeenCalledWith("Hello, world!");
 });
-
-
-
-
 });
 
+
+// checks if the config is set properly 
+it('Set custom config', () => {
+    const options: ILoggerOptions = {
+        enableStdout: true,
+        nameOfProject: "TestProject",
+        fileOptions: {
+          enableFile: true,
+          logLevel: LogLevel.INFO,
+          datePattern: 'DD-MM-YYYY',
+          zippedArchive: false,
+          maxSize: '10k', 
+          maxDuration: '1d'
+        },
+        logLevel: LogLevel.ERROR,
+        logFormat: LogFormat.TEXT,
+        transporterType: TransporterType.SINGLE_FILE,
+        overrideConsole: false,
+        enableAccessLog: true
+    };
+        if(logger.logger){
+        logger.setConfig(options);
+        logger.logger.transports.forEach(transport => {
+            if (transport instanceof winston.transports.File) {
+                expect(transport.filename).toContain(`TestProject`);
+            }
+        })
+        expect(logger.logger.level).toBe('error');
+        expect(console.log).not.toBe(undefined);
+    }
+    });
+
+//if we disable all the logging method than log method wont be called
+test('does not log when logging is disabled', () => {
+    const options: ILoggerOptions = {
+        enableStdout: false,
+        nameOfProject: "TestProject",
+        fileOptions: {
+          enableFile: false,
+          logLevel: LogLevel.INFO,
+          datePattern: 'DD-MM-YYYY',
+          zippedArchive: false,
+          maxSize: '10k', 
+          maxDuration: '1d'
+        },
+        logLevel: LogLevel.ERROR,
+        logFormat: LogFormat.TEXT,
+        transporterType: TransporterType.SINGLE_FILE,
+        overrideConsole: false,
+        enableAccessLog: false
+    };
+    if(logger.logger){
+        logger.setConfig(options);
+    jest.spyOn(logger.logger, 'log');
+    logger.info('should not log this');
+    expect(logger.logger.log).not.toHaveBeenCalled();
+    }
+});

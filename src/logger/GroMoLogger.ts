@@ -1,4 +1,4 @@
-import winston, { createLogger, Logger } from 'winston';
+import { createLogger, Logger } from 'winston';
 import { ILogger } from './interfaces/ILogger';
 import { ILoggerOptions } from './models/ILoggerOptions';
 import { ErrorStackParser } from '../error-stack-parser/ErrorStackParser';
@@ -12,11 +12,8 @@ import { InputHandler } from './InputHandler';
 
 class GroMoLogger implements ILogger {
     private projectName : string='';
-    public logger: Logger = createLogger({
-        transports: [
-          new winston.transports.Console()
-        ]
-      });;
+    public logger: Logger | undefined = undefined;
+;
     private isLoggingDisabled: boolean = false;
     private errorStackParser: ErrorStackParser = new ErrorStackParser();
     private errorStackHelper : ErrorHelper = new ErrorHelper();
@@ -70,8 +67,7 @@ class GroMoLogger implements ILogger {
          error = this.errorStackHelper.getStackTrace();}
         this.logMessage('info', message, error, context, id);
     }
-  // In error we dont have to stringify the object
-  // I have to discuss the format for the logging in error
+  
     public error(...args:any[]): void {
         let { message, context , id,error} = this.inputHandler.processArgs(args);
         if(!error){
