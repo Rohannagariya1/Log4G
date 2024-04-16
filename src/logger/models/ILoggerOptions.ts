@@ -21,4 +21,3 @@ export interface ILoggerOptions {
     overrideConsole?: boolean;
     enableAccessLog?: boolean;
 }
-// Review: Add difference between between 2 logLevel in ReadMe.md file as documentation.
