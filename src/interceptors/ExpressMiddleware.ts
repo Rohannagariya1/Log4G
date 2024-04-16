@@ -16,7 +16,6 @@ import logger from '../logger/GroMoLogger'
  * response time
  * API method name
  */
-@Injectable()
 export class ExpressMiddleware implements ILoggerMiddleware {
 
     constructor(private readonly metaDataHelper: MetaDataHelper) {}
