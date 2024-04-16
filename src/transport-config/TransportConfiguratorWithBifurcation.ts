@@ -4,7 +4,6 @@ import { ILoggerOptions } from '../logger/models/ILoggerOptions';
 import { FormatLogWithBifurcation } from '../formatter/FormatterAdvance';
 import { ITransportConfigurator } from './interfaces/ITransportconfigurator';
 import { LogFormat } from '../formatter/enums/logFormat.enum';
-import { LogType } from './enums/LogType.enum';
 import { GetLogTypeFromLevel } from './GetLogTypeFromLevel';
 import { LogLevel } from '../logger/enums/LogLevel.enum';
 import { IFormatter } from '../formatter/interfaces/IFormatter';
@@ -60,7 +59,7 @@ export class TransportConfiguratorWithBifurcation implements ITransportConfigura
                 datePattern: options.fileOptions.datePattern,
                 zippedArchive: options.fileOptions.zippedArchive,
                 maxSize: options.fileOptions.maxSize, 
-                maxFiles: options.fileOptions.maxDays,
+                maxFiles: options.fileOptions.maxDuration,
                 level: logLevel,
                 format: loggerFormat,
             }));

@@ -24,7 +24,7 @@ describe('GroMoLogger', () => {
         datePattern: 'DD-MM-YYYY',
         zippedArchive: false,
         maxSize: '10k', 
-        maxDays: '1d'
+        maxDuration: '1d'
       },
       logLevel: LogLevel.DEBUG,
       logFormat: LogFormat.TEXT,
@@ -84,7 +84,7 @@ it('Set custom config', () => {
           datePattern: 'DD-MM-YYYY',
           zippedArchive: false,
           maxSize: '10k', 
-          maxDays: '1d'
+          maxDuration: '1d'
         },
         logLevel: LogLevel.ERROR,
         logFormat: LogFormat.TEXT,
@@ -115,7 +115,7 @@ test('does not log when logging is disabled', () => {
           datePattern: 'DD-MM-YYYY',
           zippedArchive: false,
           maxSize: '10k', 
-          maxDays: '1d'
+          maxDuration: '1d'
         },
         logLevel: LogLevel.ERROR,
         logFormat: LogFormat.TEXT,

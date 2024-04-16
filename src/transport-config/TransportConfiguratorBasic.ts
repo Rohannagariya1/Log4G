@@ -33,7 +33,7 @@ export class TransportConfiguratorBasic implements ITransportConfigurator {
                 datePattern: options.fileOptions.datePattern,
                 zippedArchive: options.fileOptions.zippedArchive,
                 maxSize: options.fileOptions.maxSize, 
-                maxFiles: options.fileOptions.maxDays,
+                maxFiles: options.fileOptions.maxDuration,
                 format: loggerFormat,
             }));
         } 
@@ -50,7 +50,7 @@ export class TransportConfiguratorBasic implements ITransportConfigurator {
                 datePattern: options.fileOptions.datePattern,
                 zippedArchive: options.fileOptions.zippedArchive,
                 maxSize: options.fileOptions.maxSize, 
-                maxFiles: options.fileOptions.maxDays,
+                maxFiles: options.fileOptions.maxDuration,
                 format: advaceFormatter,
             }));
         }

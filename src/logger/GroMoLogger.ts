@@ -1,4 +1,4 @@
-import winston, { createLogger, Logger } from 'winston';
+import { createLogger, Logger } from 'winston';
 import { ILogger } from './interfaces/ILogger';
 import { ILoggerOptions } from './models/ILoggerOptions';
 import { ErrorStackParser } from '../error-stack-parser/ErrorStackParser';
