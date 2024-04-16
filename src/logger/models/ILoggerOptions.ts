@@ -1,7 +1,7 @@
 import { LogFormat } from "../../formatter/enums/logFormat.enum";
 import { LogLevel } from "../enums/LogLevel.enum";
 import { TransporterType } from "../../transport-config/enums/TransporterType.enum";
-// review the configs of datepattern , zippedarchive,maxsize,maxFiles
+// review the configs of datepattern , zippedarchive,maxsize,maxDuration
 /**
          it will look like this 
                         datePattern: 'YYYY-MM-DD',
@@ -22,7 +22,7 @@ export interface ILoggerOptions {
       datePattern: string,
       zippedArchive: boolean,
       maxSize: string,
-      maxFiles: string,
+      maxDuration: string,
 
     };
     logLevel?: LogLevel;

@@ -21,7 +21,7 @@ describe('GroMoLogger', () => {
         datePattern: 'DD-MM-YYYY',
         zippedArchive: false,
         maxSize: '10k', 
-        maxFiles: '1d'
+        maxDuration: '1d'
       },
       logLevel: LogLevel.DEBUG,
       logFormat: LogFormat.TEXT,

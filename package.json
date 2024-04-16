@@ -2,8 +2,8 @@
   "name": "log4g.js",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/logger/GroMoLogger.js",
-  "types": "dist/logger/GroMoLogger.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
     "build": "tsc"
