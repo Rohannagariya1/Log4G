@@ -1,5 +1,5 @@
 import { IGetOutputFormat } from "./interfaces/IGetOutputFormat";
-
+import { LogObject } from './models/ILogObject';
 export class GetJsonFormat implements IGetOutputFormat {
     formatLog(info: any): string {
         const logObject: LogObject = {

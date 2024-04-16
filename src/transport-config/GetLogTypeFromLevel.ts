@@ -1,4 +1,3 @@
-import { error } from "console";
 import { LogLevel } from "../logger/enums/LogLevel.enum";
 import { LogType } from "./enums/LogType.enum";
 

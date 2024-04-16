@@ -1,4 +1,4 @@
-interface LogObject {
+export interface LogObject {
     timestamp: string;
     level: string;
     traceId?: string; 
