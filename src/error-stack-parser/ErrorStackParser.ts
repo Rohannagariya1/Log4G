@@ -21,7 +21,10 @@ export class ErrorStackParser implements IErrorStackParser {
 
         // Find the first line after the CustomLogger class as it will be the place where we have implemented the custom logger
         // we will do this by ignoring the custom logger info and error info which will be on top of stack trace
-        const callerLine = lines?.find(line => line.includes(projectName))?.trim();
+        const callerLine = lines?.find(line => 
+            line.includes(projectName) && !line.includes('/node_modules/')
+          )?.trim();
+          
         // again if we fail to find the caller line than code will return the undefined value
         if (!callerLine) {
             return null;
