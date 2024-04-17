@@ -1,4 +1,4 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import { NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable, of, throwError } from 'rxjs';
 const os = require('os');
 import { tap, catchError, finalize } from 'rxjs/operators';
@@ -35,10 +35,10 @@ export class LoggerInterceptorNest implements NestInterceptor {
         next.handle().pipe(
           tap(() => {
             // Only log successful responses here, if error is not thrown
-            if (!response.headersSent) {
+
               const statusCode = response.statusCode;
               logger.http(`[${method}] ${path} - ${Date.now() - start}ms - IP: ${requesterIp} - responseCode: ${statusCode}`);
-            }
+
           }),
           catchError((error) => {
             // Handle and log errors
@@ -47,6 +47,7 @@ export class LoggerInterceptorNest implements NestInterceptor {
             return throwError(error); // Rethrow the error for further handling
           }),
           finalize(() => {
+            
             // Any cleanup can go here
             if (!observer.closed) {
               observer.complete();
