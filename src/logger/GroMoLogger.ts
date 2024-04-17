@@ -13,7 +13,7 @@ import { InputHandler } from './InputHandler';
 class GroMoLogger implements ILogger {
     private projectName : string='';
     public logger: Logger | undefined = undefined;
-;
+
     private isLoggingDisabled: boolean = false;
     private errorStackParser: ErrorStackParser = new ErrorStackParser();
     private errorStackHelper : ErrorHelper = new ErrorHelper();
@@ -47,10 +47,10 @@ class GroMoLogger implements ILogger {
     }
 
     private overrideConsole() {
-        console.log = (...args: any[]) => this.info(args);
-        console.error = (...args: any[]) => this.error(args);
-        console.warn = (...args: any[]) => this.warn(args);
-        console.debug = (...args: any[]) => this.debug(args);
+        console.log = (...args: any[]) => this.info(...args);
+        console.error = (...args: any[]) => this.error(...args);
+        console.warn = (...args: any[]) => this.warn(...args);
+        console.debug = (...args: any[]) => this.debug(...args);
 
     }
 
