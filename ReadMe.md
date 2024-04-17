@@ -2,6 +2,16 @@
 
 `gromo-log4g-js` is a versatile and easy-to-use logging framework for JavaScript and Nest.js applications. It provides powerful logging capabilities to help developers track and debug their applications efficiently.
 
+Core features:
+
+- Log based on levels
+- Plug-and-play access logs: store logs of every API request that reaches your micro-service
+- Generates and tracks trace-id for each log
+- track host-ip, requester ip, response time of each API as part of access logs
+- Get methodName, className, lineNumber, filePath in logs
+- Choose between log formats (Text or Json)
+- Choose how to store logs (single file or bifurcated by log level)
+
 # Features
 
 - **Customizable Logging Levels**: Configure different log levels (e.g., DEBUG, INFO, WARN, ERROR) according to your application's needs.
