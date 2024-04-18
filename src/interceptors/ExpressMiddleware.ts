@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { ILoggerMiddleware } from './interfaces/ILoggerMiddleware';
-import { MetaDataHelper } from './MetaDataHelper';
+import { metaDataHelper } from './MetaDataHelper';
 import { asyncLocalStorage } from './ContextStorage';
 const os = require('os');
 import logger from '../logger/GroMoLogger'
@@ -16,10 +15,7 @@ import logger from '../logger/GroMoLogger'
  * response time
  * API method name
  */
-@Injectable()
 export class ExpressMiddleware implements ILoggerMiddleware {
-
-    constructor(private readonly metaDataHelper: MetaDataHelper) {}
 
     requestMiddleware = (req: Request, res: Response, next: NextFunction) => {
         const start = Date.now();
@@ -29,14 +25,14 @@ export class ExpressMiddleware implements ILoggerMiddleware {
     
         // Extract host IP
         const networkInterfaces = os.networkInterfaces();
-        const extractedIPs = this.metaDataHelper.extractIP(networkInterfaces);
+        const extractedIPs = metaDataHelper.extractIP(networkInterfaces);
         const IPAddress = JSON.stringify(extractedIPs);
 
         // Extract URI path
         const uriPath = req.path;
     
         // Extract Trace-id
-        const traceId: any = req.headers['trace-id'] || this.metaDataHelper.generateTraceId();
+        const traceId: any = req.headers['trace-id'] || metaDataHelper.generateTraceId();
         req.headers['trace-id'] = traceId;
 
         // Method name

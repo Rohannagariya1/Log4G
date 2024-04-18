@@ -4,15 +4,11 @@ const os = require('os');
 import { tap, catchError, finalize } from 'rxjs/operators';
 import { asyncLocalStorage } from './ContextStorage';
 import logger from '../logger/GroMoLogger'
-import { MetaDataHelper } from './MetaDataHelper';
+import { metaDataHelper } from './MetaDataHelper';
 import { IMetaDataHelper } from './interfaces/IMetaDataHelper';
 
 export class LoggerInterceptorNest implements NestInterceptor {
 
-  private metaDataHelper: IMetaDataHelper;
-  constructor() {
-    this.metaDataHelper = new MetaDataHelper();
-  }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const start = Date.now();
@@ -21,13 +17,13 @@ export class LoggerInterceptorNest implements NestInterceptor {
    
     const response = httpContext.getResponse();
 
-    const traceId = request.headers['trace-id'] || this.metaDataHelper.generateTraceId();
+    const traceId = request.headers['trace-id'] || metaDataHelper.generateTraceId();
     request.headers['trace-id'] = traceId; //  review this change , Im updating the trace id in the header of the request 
     const requesterIp = request.ip; // Assuming this gets the client IP. For real client IP behind proxy, use request.headers['x-forwarded-for'] || request.ip
     const path = request.url;
     const method = request.method; // HTTP method (GET, POST, PUT, DELETE)
     const networkInterfaces = os.networkInterfaces();
-    const extractedIPs = this.metaDataHelper.extractIP(networkInterfaces);
+    const extractedIPs = metaDataHelper.extractIP(networkInterfaces);
     const IPAddress = JSON.stringify(extractedIPs);
     
     return new Observable(observer => {
