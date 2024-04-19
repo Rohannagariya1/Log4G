@@ -1,9 +1,7 @@
 import { NetworkInterfaceInfo, networkInterfaces } from 'os';
 import { IMetaDataHelper } from './interfaces/IMetaDataHelper';
-import { Injectable } from '@nestjs/common';
 
-@Injectable()
-export class MetaDataHelper implements IMetaDataHelper {
+class MetaDataHelper implements IMetaDataHelper {
 
   extractIP(networkInterfaces: { [interfaceName: string]: NetworkInterfaceInfo[] }):any {
 
@@ -49,5 +47,7 @@ export class MetaDataHelper implements IMetaDataHelper {
 
     return `${last4Digits}${fourRandomDigits}`;
   }
-    
 }
+
+const metaDataHelper = new MetaDataHelper();
+export { metaDataHelper };
