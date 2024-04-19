@@ -5,4 +5,4 @@ export { ILoggerOptions } from './logger/models/ILoggerOptions';
 export { default as logger } from './logger/GroMoLogger';
 export * from './interceptors/nestInterceptor'
 export { ExpressMiddleware } from './interceptors/ExpressMiddleware'
-// export {default as loggerInterceptor }from './interceptors/FastifyMiddleware'
+
