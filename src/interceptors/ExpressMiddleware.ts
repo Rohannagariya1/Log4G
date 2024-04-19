@@ -38,23 +38,23 @@ export class ExpressMiddleware implements ILoggerMiddleware {
         // Method name
         const method = req.method;
 
+        req.on('finish', () => {
+            const end = Date.now();
+            const responseTime = end - start;
+            
+            const statusCode = res.statusCode;
+            logger.http(`[${method}] ${uriPath} - ${responseTime}ms - IP: ${requesterIP} - responseCode: ${statusCode}`);
+        });
+
+        req.on('error', (error: any) => {
+            const end = Date.now();
+            const responseTime = end - start;
+            
+            const statusCode = res.statusCode;
+            logger.http(`[${method}] ${uriPath} - ${responseTime}ms - IP: ${requesterIP} - responseCode: ${statusCode} - Error: ${error.message}`);
+        });
+
         asyncLocalStorage.run({ traceId, IPAddress }, () => {
-            res.on('end', () => {
-                const end = Date.now();
-                const responseTime = end - start;
-                
-                const statusCode = res.statusCode;
-                logger.http(`[${method}] ${uriPath} - ${responseTime}ms - IP: ${requesterIP} - responseCode: ${statusCode}`);
-            });
-
-            res.on('error', (error: any) => {
-                const end = Date.now();
-                const responseTime = end - start;
-                
-                const statusCode = res.statusCode;
-                logger.http(`[${method}] ${uriPath} - ${responseTime}ms - IP: ${requesterIP} - responseCode: ${statusCode} - Error: ${error.message}`);
-            });
-
             next();
         });
     };
