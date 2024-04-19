@@ -102,14 +102,14 @@ For projects implemented in javascript with express.js or fastify as their core 
 ## Rohan Nagariya
 Intern - SDE
 
-Rohan Nagariya is an intern at GroMo who has come from DTU and has been the main person who write code for this package.
+Rohan Nagariya is an intern at GroMo who has come from DTU and has written majority of the code for this package.
 
 - Email: rohan.nagariya@gromo.in
 
 ## Paramdeep Singh Obheroi
 Senior Software Engineer
 
-Paramdeep, a Senior Engineer at Gromo, designed the package and guided Rohan in this project.
+Paramdeep is a Senior Engineer at GroMo. He has designed the package and led Rohan in this project.
 
 - Email: paramdeep.obheroi@gromo.in
 
