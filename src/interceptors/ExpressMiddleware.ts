@@ -38,7 +38,7 @@ export class ExpressMiddleware implements ILoggerMiddleware {
         // Method name
         const method = req.method;
 
-        req.on('finish', () => {
+        res.once('finish', () => {
             const end = Date.now();
             const responseTime = end - start;
             
@@ -46,7 +46,7 @@ export class ExpressMiddleware implements ILoggerMiddleware {
             logger.http(`[${method}] ${uriPath} - ${responseTime}ms - IP: ${requesterIP} - responseCode: ${statusCode}`);
         });
 
-        req.on('error', (error: any) => {
+        res.once('error', (error: any) => {
             const end = Date.now();
             const responseTime = end - start;
             
