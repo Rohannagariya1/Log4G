@@ -19,7 +19,7 @@
 You can install log4g.js via npm:
 
 ```bash
-npm install @gromo-fintech/log4g.js
+npm install @gromo-fintech/log4g
 ```
 
 # Usage
@@ -28,25 +28,25 @@ npm install @gromo-fintech/log4g.js
 
 ```typescript
 // import logger
-import { logger, LogLevel, LogFormat } from '@gromo-fintech/log4g';
+import { logger, LogLevel, LogFormat } from '@gromo-fintech/log4g/dist';
 
 // configure logger [example config]
 logger.setConfig({
-    enableStdout: true; // if true, prints logs on stdout and stderr
-    nameOfProject: "gromoinsure-insurance"; // name of your project. Used to creating log files.
+    enableStdout: true, // if true, prints logs on stdout and stderr
+    nameOfProject: "gromoinsure-insurance", // name of your project. Used to creating log files.
     fileOptions: {
-      enableFile: true; // if true, write logs to a file
-      logLevel: LogLevel.DEBUG; // define log level to track for files
+      enableFile: true, // if true, write logs to a file
+      logLevel: LogLevel.DEBUG,// define log level to track for files
       datePattern: "DD-MM-YYYY",
       zippedArchive: false, // if true, log files are archived
       maxSize: "10k", // max size of a log file. Set to 10 KB here. 
       maxDuration: "7d", // max duration after which log rotation starts. Set to 7 days here.
-    };
-    logLevel: LogLevel.DEBUG;
-    logFormat: LogFormat.TEXT; // Choose between TEXT and JSON to format logs accordingly
-    transporterType: TransporterType.SINGLE_FILE; // Choose between SINGLE_FILE and BIFIRUCATED_BY_LOG_LEVEL
-    overrideConsole: true; // if true, it overrides existing `console.log` in your project to log4g's implementation
-    enableAccessLog?: true; // if true, stores access logs using interceptor / middleware (needs to be attached)
+    },
+    logLevel: LogLevel.DEBUG,
+    logFormat: LogFormat.TEXT,// Choose between TEXT and JSON to format logs accordingly
+    transporterType: TransporterType.SINGLE_FILE, // Choose between SINGLE_FILE and BIFIRUCATED_BY_LOG_LEVEL
+    overrideConsole: true, // if true, it overrides existing `console.log` in your project to log4g's implementation
+    enableAccessLog?: true, // if true, stores access logs using interceptor / middleware (needs to be attached)
 })
 ```
 
@@ -76,11 +76,24 @@ In order to store access logs and extract request scope information like `trace-
 
 ## For Nest.js projects
 
-For projects implemented using nest.js framework you can use the `LoggerInterceptorNest` class and set it as a global interceptor in your nest project:
+For projects implemented using nest.js framework you can use the `LoggerInterceptorNest` class and provide it in the provider in the "app.module.ts" with the APP_INTERCEPTOR in provide and useClass as LoggerInterceptorNest . Below is the example of the same
 
 ```typescript
-const app = await NestFactory.create(AppModule);
-app.useGlobalInterceptors(LoggerInterceptorNest);
+import {LoggerInterceptorNest} from '@gromo-fintech/log4g/dist';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggerInterceptorNest
+    },
+
+    AppService
+  ],
+})
+export class AppModule {}
 ```
 
 or you can have it for specific controllers with:
