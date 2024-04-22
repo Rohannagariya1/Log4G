@@ -9,7 +9,7 @@ export class ErrorStackParser implements IErrorStackParser {
      * @param stackTrace 
      * @returns ParsedStackTrace
      */
-    parse(stackTrace: string ,projectName:string) : ParsedStackTrace | null  {
+    parse(stackTrace: string ,projectName:string) : string | null  {
         // if stack trace doesn't exist then the function exit with the undefined value for each info
         if (!stackTrace) {
             return null;
@@ -30,31 +30,7 @@ export class ErrorStackParser implements IErrorStackParser {
             return null;
         }
 
-        // this is the regex to meet the desired patter for finding the class method that includes the class name and method name
-        const classMethod = callerLine.match(/at (\w+)\.(\w+)/); // Review: Write test cases for this regex.
-        let className = null;
-        let methodName = null;
-        if (classMethod) {
-            [  ,className, methodName] = classMethod;  
-        }else {
-            return null;
-        } 
-
-        // Extract file path and line number from the caller line using the regex
-        const matchResult = callerLine.match(/\((.*)\)/); // Review: Iska bhi test case
-        
-        // if we don't get the caller line then return the information we extracted and unkown field with null values
-        if (!matchResult || !matchResult[1]) {
-            return null;
-            //return { filePath: null, lineNumber: -1, className, methodName };
-        }
-
-        // here we format our output in a more understandable format
-        const parts = matchResult?.[1]?.split(':') || [];
-        const filePath = parts?.join(':'); // Review: Add null checks here
-        const lineNumber = parseInt(parts?.slice(-2)[0]);
-        
-        return { filePath, lineNumber, className, methodName };
+        return callerLine;
     }
 }
 
