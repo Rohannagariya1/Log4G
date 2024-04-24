@@ -7,8 +7,8 @@ import { GetTextFormat } from "./GetTextFormat";
 
 export class FormatLogWithBifurcation implements IFormatter { 
     formatter (logFormat?: LogFormat , logLevel?: LogLevel): any {
-        let getJsonFormat : GetJsonFormat = new GetJsonFormat();
-        let getTextFormat : GetTextFormat = new GetTextFormat();
+        const getJsonFormat: GetJsonFormat = new GetJsonFormat();
+        const getTextFormat: GetTextFormat = new GetTextFormat();
         if (!logFormat) {
             logFormat = LogFormat.TEXT;
           }
@@ -17,7 +17,7 @@ export class FormatLogWithBifurcation implements IFormatter {
             return info.level === level ? info : false;
         })();
  
-        let formatComponents = [
+        const formatComponents = [
             format.timestamp(),
         ];
   

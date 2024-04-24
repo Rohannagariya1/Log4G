@@ -7,9 +7,9 @@ import { GetTextFormat } from "./GetTextFormat";
 
 export class FormatLogBasic implements IFormatter {
    
-    formatter (logFormat?: LogFormat , logLevel?: LogLevel) : any {
-        let getJsonFormat : GetJsonFormat = new GetJsonFormat();
-        let getTextFormat : GetTextFormat = new GetTextFormat();
+    formatter (logFormat?: LogFormat, logLevel?: LogLevel) : any {
+        const getJsonFormat: GetJsonFormat = new GetJsonFormat();
+        const getTextFormat: GetTextFormat = new GetTextFormat();
         if (!logFormat) {
             logFormat = LogFormat.TEXT;
           }
@@ -17,7 +17,7 @@ export class FormatLogBasic implements IFormatter {
         const filterLevel = (level: LogLevel) => format((info) => {
             return info.level === level ? false : info;
         })();
-        let formatComponents = [
+        const formatComponents = [
             format.timestamp(),
         ];
         if (logLevel) {

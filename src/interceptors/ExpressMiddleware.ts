@@ -21,7 +21,7 @@ export class ExpressMiddleware implements ILoggerMiddleware {
         const start = Date.now();
     
         // Extract requester IP address
-        const requesterIP = req.ip;
+        const requesterIP: string = req.ip?.toString() || '';
     
         // Extract host IP
         const networkInterfaces = os.networkInterfaces();
@@ -54,7 +54,7 @@ export class ExpressMiddleware implements ILoggerMiddleware {
             logger.http(`[${method}] ${uriPath} - ${responseTime}ms - IP: ${requesterIP} - responseCode: ${statusCode} - Error: ${error.message}`);
         });
 
-        asyncLocalStorage.run({ traceId, IPAddress }, () => {
+        asyncLocalStorage.run({ traceId, IPAddress, requesterIP, uriPath, method }, () => {
             next();
         });
     };

@@ -76,10 +76,10 @@ In order to store access logs and extract request scope information like `trace-
 
 ## For Nest.js projects
 
-For projects implemented using nest.js framework you can use the `LoggerInterceptorNest` class and provide it in the provider in the "app.module.ts" with the APP_INTERCEPTOR in provide and useClass as LoggerInterceptorNest . Below is the example of the same
+For projects implemented using nest.js framework you can use the `LoggerInterceptorNest` class and provide it in the provider in `app.module.ts` with the `APP_INTERCEPTOR` under `provide` and `LoggerInterceptorNest` under `useClass` as shown below:
 
 ```typescript
-import {LoggerInterceptorNest} from '@gromo-fintech/log4g/dist';
+import { LoggerInterceptorNest } from '@gromo-fintech/log4g';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 @Module({
   imports: [],
@@ -89,7 +89,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       provide: APP_INTERCEPTOR,
       useClass: LoggerInterceptorNest
     },
-
     AppService
   ],
 })
@@ -102,13 +101,68 @@ or you can have it for specific controllers with:
 @UseInterceptors(LoggerInterceptorNest)
 ```
 
-## For JavaScript projects
+## For Express.js projects
 
-For projects implemented in javascript with express.js or fastify as their core server engine you can use 
+For projects implemented in javascript with express.js as their core server engine you can use the provided `requestMiddleware` function and use as middleware:
 
 ```javascript
-<to be updated>
+const { logger, LogFormat, LogLevel, TransporterType, ExpressMiddleware } = require("@gromo-fintech/log4g");
+const loggerOptions = {
+  enableStdout: true ,
+  nameOfProject : "payoutgrid",
+  fileOptions: {
+      enableFile: true,
+      logLevel : LogLevel.INFO,
+      datePattern: 'DD-MM-YYYY',
+      zippedArchive: false,
+      maxSize: '10k', 
+      maxDuration: '1d',
+  },
+  logLevel : LogLevel.DEBUG,
+  logFormat : LogFormat.JSON,
+  transporterType : TransporterType.BIFIRUCATED_BY_LOG_LEVEL,
+  overrideConsole : true,
+  enableAccessLog : true,
+};
+logger.setConfig(loggerOptions);
+const loggingMiddleware = new ExpressMiddleware();
+app.use(loggingMiddleware.requestMiddleware);
 ```
+
+Remember to do this before initializing all routes.
+
+## For Fastify projects
+
+For projects implemented in javascript with fastify as their core server engine you can use the provided `requestMiddleware`, `responseMiddleware`, and `errorMiddleware` hooks:
+
+```javascript
+const { logger, LogFormat, LogLevel, TransporterType, FastifyMiddleware } = require('@gromo-fintech/log4g');
+const loggerOptions = {
+  enableStdout: true,
+  nameOfProject : "gromoinsure-insurance",
+  fileOptions: {
+      enableFile: true,
+      logLevel : LogLevel.INFO,
+      datePattern: 'DD-MM-YYYY',
+      zippedArchive: false,
+      maxSize: '10k', 
+      maxDuration: '1d',
+  },
+  logLevel : LogLevel.DEBUG,
+  logFormat : LogFormat.JSON,
+  transporterType : TransporterType.BIFIRUCATED_BY_LOG_LEVEL,
+  overrideConsole : true,
+  enableAccessLog : true,
+};
+logger.setConfig(loggerOptions);
+
+const fastifyMiddleware = new FastifyMiddleware();
+fastify.addHook('onRequest', fastifyMiddleware.requestMiddleware);
+fastify.addHook('onResponse', fastifyMiddleware.responseMiddleware);
+fastify.addHook('onError', fastifyMiddleware.errorMiddleware);
+```
+
+The above changes will enable `access logs` under `~/.gromo-logger/<project-name>/access_logs` and add `trace id`, `requester-ip`, `URI path`, `API method`, `API response status code`, and `host-ips` to application logs as well.
 
 # Authors
 
