@@ -157,7 +157,7 @@ const loggerOptions = {
 logger.setConfig(loggerOptions);
 
 const fastifyMiddleware = new FastifyMiddleware();
-fastify.addHook('onRequest', fastifyMiddleware.requestMiddleware);
+fastify.addHook('preHandler', fastifyMiddleware.requestMiddleware);
 fastify.addHook('onResponse', fastifyMiddleware.responseMiddleware);
 fastify.addHook('onError', fastifyMiddleware.errorMiddleware);
 ```
@@ -176,7 +176,7 @@ Rohan Nagariya is an intern at GroMo who has come from DTU and has written major
 ## Paramdeep Singh Obheroi
 Senior Software Engineer
 
-Paramdeep is a Senior Engineer at GroMo. He has designed the package and led Rohan in this project.
+Paramdeep is a Senior Engineer at GroMo. He has designed and reviewed the package alongside mentoring Rohan in building this package.
 
 - Email: paramdeep.obheroi@gromo.in
 

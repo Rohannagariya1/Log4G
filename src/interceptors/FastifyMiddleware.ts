@@ -26,7 +26,6 @@ export class FastifyMiddleware implements ILoggerMiddleware {
         // Method name
         const method = request.method ? request.method : request.req?.method;
 
-
         asyncLocalStorage.run({ traceId, IPAddress, requesterIP, uriPath, method }, () => {
             done();
         });
