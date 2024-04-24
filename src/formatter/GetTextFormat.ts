@@ -2,7 +2,7 @@ import { IGetOutputFormat } from "./interfaces/IGetOutputFormat";
 
  export class GetTextFormat implements IGetOutputFormat {   
     formatLog(info: any): string {
-        let baseMsg = `${info.timestamp} ${info.level}`;
+        let baseMsg = `${info.timestamp} | ${info.level}`;
         let message = info.message;
         let contextMessage = info.context || '';
         let traceId = info.traceId || '';
@@ -14,6 +14,6 @@ import { IGetOutputFormat } from "./interfaces/IGetOutputFormat";
             parseStackMessage = ` | trace: ${JSON.stringify(info.parsedStack)}`;
         }
 
-        return `${baseMsg} traceId: ${traceId} HostIP: ${IPAddress} ${parseStackMessage} context: ${contextMessage} id: ${id} message: ${message}`;
+        return `${baseMsg} | traceId: ${traceId} | HostIP: ${IPAddress}${parseStackMessage} | context: ${contextMessage} | id: ${id} | message: ${message}`;
     }
 }
