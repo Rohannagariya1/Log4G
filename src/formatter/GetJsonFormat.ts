@@ -6,9 +6,9 @@ export class GetJsonFormat implements IGetOutputFormat {
             timestamp: info.timestamp,
             level: info.level,
             path: info.path || '',
-            parsedStack: info.parsedStack ? JSON.stringify(info.parsedStack) : '',
-            context: info.context || ' ',
-            id: info.id || ' ',
+            trace: info.parsedStack ? JSON.stringify(info.parsedStack) : '',
+            context: info.context || '',
+            id: info.id || '',
             message: info.message
         };
     

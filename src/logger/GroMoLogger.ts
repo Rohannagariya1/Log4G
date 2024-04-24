@@ -9,9 +9,8 @@ import { LogLevel } from './enums/LogLevel.enum';
 import { asyncLocalStorage } from '../interceptors/ContextStorage';
 import { InputHandler } from './InputHandler';
 
-
 class GroMoLogger implements ILogger {
-    private projectName : string='';
+    private projectName: string = '';
     public logger: Logger | undefined = undefined;
 
     private isLoggingDisabled: boolean = false;
@@ -21,7 +20,12 @@ class GroMoLogger implements ILogger {
 
     constructor() { }
     setConfig(options: ILoggerOptions){
-        this.projectName =options.nameOfProject;
+        this.projectName = options.nameOfProject;
+
+        if (!this.projectName) {
+            throw new Error('Project name is required');
+        }
+
         if(!options.transporterType){
             options.transporterType = TransporterType.SINGLE_FILE;
         }
@@ -51,34 +55,36 @@ class GroMoLogger implements ILogger {
         console.error = (...args: any[]) => this.error(...args);
         console.warn = (...args: any[]) => this.warn(...args);
         console.debug = (...args: any[]) => this.debug(...args);
-
     }
 
-  
     public warn(...args:any[]): void {
         let { message, context , id,error} = this.inputHandler.processArgs(args);
-        if(!error){
-         error = this.errorStackHelper.getStackTrace();}
+        if (!error) {
+            error = this.errorStackHelper.getStackTrace();
+        }
         this.logMessage('warn', message, error, context, id);
     }
     public info(...args:any[]): void {
         let { message, context , id,error} = this.inputHandler.processArgs(args);
-        if(!error){
-         error = this.errorStackHelper.getStackTrace();}
+        if (!error) {
+            error = this.errorStackHelper.getStackTrace();
+        }
         this.logMessage('info', message, error, context, id);
     }
   
     public error(...args:any[]): void {
         let { message, context , id,error} = this.inputHandler.processArgs(args);
-        if(!error){
-         error = this.errorStackHelper.getStackTrace();}
+        if (!error) {
+            error = this.errorStackHelper.getStackTrace();
+        }
         this.logMessage('error', message, error, context, id);
     }
   
     public http(...args:any[]): void {
         let { message, context , id,error} = this.inputHandler.processArgs(args);
-        if(!error){
-         error = this.errorStackHelper.getStackTrace();}
+        if (!error) {
+            error = this.errorStackHelper.getStackTrace();
+        }
         this.logMessage('http', message, error, context, id);
     }
   
@@ -99,11 +105,8 @@ class GroMoLogger implements ILogger {
     private logMessage(level: string, message: string ,error?: Error, context?: string, id?: string): void {
         if (this.isLoggingDisabled) return;
 
-            
         const logContext = asyncLocalStorage.getStore();
 
-       
-        
         if (this.isLoggingDisabled) return;
     
         const logData: { [key: string]: any } = { context };
@@ -111,28 +114,25 @@ class GroMoLogger implements ILogger {
         logData.IPAddress = logContext?.IPAddress;
         let logMessage: string;
   
-            logMessage = message;
-            if (error) {
-                if (error.message) {
+        logMessage = message;
+        if (error) {
+            if (error.message) {
 
-                    logMessage += ` - Error: ${error.message}`;
-                }
-                if (error.stack) {
-                    logData.parsedStack = this.errorStackParser.parse(error.stack,this.projectName);
-                }
-            
+                logMessage += ` - Error: ${error.message}`;
+            }
+            if (error.stack) {
+                logData.parsedStack = this.errorStackParser.parse(error.stack,this.projectName);
+            }
         }
     
-  
         if (id) logData.id = id;
         if(this.logger)
         this.logger.log(level, logMessage, logData);
-}
+    }
 
-public getLoggerForTest(): Logger | undefined {
-    return this.logger;
-}
-
+    public getLoggerForTest(): Logger | undefined {
+        return this.logger;
+    }
 }
 const logger = new GroMoLogger()
 export default logger

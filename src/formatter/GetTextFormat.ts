@@ -11,7 +11,7 @@ import { IGetOutputFormat } from "./interfaces/IGetOutputFormat";
         let parseStackMessage = '';
 
         if (info.parsedStack) {
-            parseStackMessage = ` | ParsedStack: ${JSON.stringify(info.parsedStack)}`;
+            parseStackMessage = ` | trace: ${JSON.stringify(info.parsedStack)}`;
         }
 
         return `${baseMsg} traceId: ${traceId} HostIP: ${IPAddress} ${parseStackMessage} context: ${contextMessage} id: ${id} message: ${message}`;

@@ -3,7 +3,7 @@ export interface LogObject {
     level: string;
     traceId?: string; 
     path?: string; 
-    parsedStack?: string; 
+    trace?: string; 
     message?: string;
     context?: string;
     id?: string;
