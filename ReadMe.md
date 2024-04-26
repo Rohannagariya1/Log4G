@@ -28,7 +28,7 @@ npm install @gromo-fintech/log4g
 
 ```typescript
 // import logger
-import { logger, LogLevel, LogFormat } from '@gromo-fintech/log4g/dist';
+import { logger, LogLevel, LogFormat } from '@gromo-fintech/log4g';
 
 // configure logger [example config]
 logger.setConfig({
