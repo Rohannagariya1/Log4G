@@ -10,7 +10,7 @@
 
 - **Log Meta Data**: Logs have meta data useful for debugging like: methodName, lineNumer, className, filePath, timestamp etc.
 
-- **Saves Logs as stdout or files**: Saves logs as stdout / stderr or save as file depending upon config. When storing logs in a file you can choose between storing in a single file, or bifurcated based on log levels.
+- **Saves Logs as stdout or files**: Saves logs as stdout / stderr or save as file depending upon config. When storing logs in a file you can choose between storing in a single file, or bifurcated based on log levels. **All logs files are stored at `~/.gromo-logger/<project-name>/`.**
 
 - **Plug and Play Access Logs**: store logs of every API request that reaches your micro-service. Track host-ip, requester ip, response time of each API alongside trace-id as part of access logs
 
