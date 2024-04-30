@@ -9,7 +9,7 @@ export class InputHandler {
             if (arg instanceof Error) {
               // Capture the first Error encountered and ignore others if multiple are present
                 if (!error) error = arg;
-            }else if (typeof arg === 'object') {
+            } else if (typeof arg === 'object') {
                 try {
                 // Attempt to stringify the object
                 acc.push(JSON.stringify(arg));
@@ -28,7 +28,7 @@ export class InputHandler {
                     acc.push("[Unknown Error]");
                 }
               }
-            }else {
+            } else {
             // Convert non-objects to string directly
                 try{
                     acc.push(String(arg));
@@ -37,9 +37,9 @@ export class InputHandler {
                     logger.error("Error in printing object:", e.message);
                     
                 }
-                }
+            }
             return acc;
-      }, []);
+        }, []);
 
         let id ='';
         let context ='';
